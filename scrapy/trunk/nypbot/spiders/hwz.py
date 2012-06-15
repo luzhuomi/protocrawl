@@ -8,6 +8,7 @@ from nypbot.utils import normalizeFriendlyDate
 from mongomodel.crawl.hwz.models import * # apparently, scrapy does not like a class named 'Post' :(
 
 from dateutil.parser import parse
+import pymongo
 
 class HwzSpider(CrawlSpider):
     name = "hwz"
@@ -47,7 +48,10 @@ class HwzSpider(CrawlSpider):
                     self.log(e.message)
             else:
                 self.log("article exists")
-        db.connection.disconnect()
+        if pymongo.version == '2.0.1':
+            db.connection.disconnect()
+        else:
+            db.disconnect()
 	
     """
     When writing crawl spider rules, avoid using parse as callback, since the CrawlSpider uses the parse method itself to implement its logic. So if you override the parse method, the crawl spider will no longer work.
