@@ -9,7 +9,8 @@ setup(  name='mongomodel',
         author_email='luzhuomi@gmail.com',
         url='',
         packages=['mongomodel'
-                  ,'mongomodel.crawl.hwz',
+	          ,'mongomodel.crawl'
+                  ,'mongomodel.crawl.hwz'
 		 ],
 	platforms=["any"],
         long_description="This module offers a model-style interface to the Mongo DB.",

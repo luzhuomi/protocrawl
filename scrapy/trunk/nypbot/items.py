@@ -1,6 +1,5 @@
 from scrapy.item import Item, Field
 
-
 class NypbotItem(Item):
 
     author_id = Field()
