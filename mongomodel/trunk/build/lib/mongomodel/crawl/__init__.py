@@ -1,1 +1,1 @@
-from mongomodel.crawl import hwz
+from mongomodel.crawl import hwz,toc

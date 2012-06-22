@@ -13,3 +13,10 @@ class Post(NypbotItem):
     date_posted = Field()
     def __str__(self):
         return "Website: author_id=%s title=%s body=%s url=%s date_posted=%s" % (self.get('author_id'), self.get('title'), self.get('body'), self.get('url'), self.get('date_posted'))
+
+
+class PostWithPermaLink(Post):
+    perma_link = Field()
+    def __str__(self):
+        return "Website: author_id=%s title=%s body=%s url=%s date_posted=%s perma_link=%s" % (self.get('author_id'), self.get('title'), self.get('body'), self.get('url'), self.get('date_posted'), self.get('perma_link'))
+    

@@ -11,6 +11,7 @@ setup(  name='mongomodel',
         packages=['mongomodel'
 	          ,'mongomodel.crawl'
                   ,'mongomodel.crawl.hwz'
+                  ,'mongomodel.crawl.toc'
 		 ],
 	platforms=["any"],
         long_description="This module offers a model-style interface to the Mongo DB.",
