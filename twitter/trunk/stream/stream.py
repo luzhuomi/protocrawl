@@ -1,6 +1,7 @@
 import pycurl, json, urllib2
 from dateutil.parser import parse
 from mongomodel.crawl.twitter.models import *
+import pymongo
 
 #STREAM_URL = "https://stream.twitter.com/1/statuses/filter.json?locations=103.594154,1.199738,104.017814,1.471575"
 STREAM_URL = "https://stream.twitter.com/1/statuses/filter.json?follow="
