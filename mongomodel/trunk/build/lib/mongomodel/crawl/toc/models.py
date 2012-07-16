@@ -16,7 +16,7 @@ class Comment(Document):
 	date_posted = DateTimeField(required=True)
 	perma_link = StringField()
 	meta = {
-		'indexes': ['url', 'author_id', 'date_posted'],
+		'indexes': ['url', 'author_id', 'date_posted', 'perma_link'],
 	}
 
 

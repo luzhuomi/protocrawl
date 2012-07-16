@@ -12,6 +12,7 @@ setup(  name='mongomodel',
 	          ,'mongomodel.crawl'
                   ,'mongomodel.crawl.hwz'
                   ,'mongomodel.crawl.toc'
+                  ,'mongomodel.crawl.twitter'
 		 ],
 	platforms=["any"],
         long_description="This module offers a model-style interface to the Mongo DB.",
