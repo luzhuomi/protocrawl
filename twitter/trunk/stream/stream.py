@@ -137,7 +137,13 @@ def insert_to_mongo(data):
             pass
     except ValueError,e:
         print "Value Error"
-    db.connection.disconnect()
+
+
+    if pymongo.version == '2.0.1':
+        db.connection.disconnect()
+    else:
+        db.disconnect()
+
         
 
 

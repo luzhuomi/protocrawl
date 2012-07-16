@@ -16,14 +16,14 @@ class TocSpider(CrawlSpider):
     allowed_domains = ["theonlinecitizen.com"]
     start_urls = [
         "http://theonlinecitizen.com/2012/",
+        #"http://theonlinecitizen.com/2012/06/world-markets-rattled-by-greek-elections/",
         #"http://theonlinecitizen.com/2011/",
         #"http://theonlinecitizen.com/2010/",       
     ]
     rules = (
         # Extract links matching 'garage-sales-18/.*html' (but not matching 'subsection.php')
         # and follow links from them (since no callback means follow=True by default).
-        # Rule(SgmlLinkExtractor(allow=('garage\-sales\-18/.*\.html', )), callback='parse_item', follow=True),
-        Rule(LxmlLinkExtractor(), callback='extract_item', follow=True),
+        Rule(LxmlLinkExtractor(allow=(), deny=('jpg$')), callback='extract_item', follow=True),
         #Rule(SgmlLinkExtractor(allow=('2011', )), callback='extract_item', follow=True),
         #Rule(SgmlLinkExtractor(allow=('2010', )), callback='extract_item', follow=True),        
 
@@ -66,7 +66,7 @@ class TocSpider(CrawlSpider):
         hxs = HtmlXPathSelector(response)
         posts = hxs.select("//ol[@class='commentlist']/li")
         items = []
-
+        
         for post in posts:
             item = PostWithPermaLink()
             item['author_id'] = ''.join(post.select(".//div[@class='comment-head']/span[@class='name left']/text()").extract())
@@ -78,4 +78,21 @@ class TocSpider(CrawlSpider):
             items.append(item)
 
         self.insert_posts(items)
+        # the following does not work, toc embed fb comments in an iframe, which is triggered by ajax.
+        '''
+        
+        fb_posts = hxs.select("//iframe//ui[@class='uiList fbFeedbackPosts']/li")
+
+
+        fb_items = [] 
+        for fb_post in fb_posts:
+            fb_item = PostWithPermaLink()
+            fb_item['author_id'] = ''.join(post.select(".//a[@class='profileName']/text()").extract())
+            fb_item['url'] = response.url
+            fb_item['body'] = '\n'.join(map(lambda x:x.strip('\t\n\r'),post.select(".//div[@class='postText']/text()").extract()))
+            fb_item['title'] = '\n'.join(map(lambda x:x.strip('\t\n\r'),post.select("//h2[@class='posttitle']/text()").extract()))
+            fb_item['date_posted'] = ''.join(map(lambda x:x.strip(' \t\n\r#').strip(),post.select(".//abbr/@title").extract()))
+            fb_item['perma_link'] = ''.join(map(lambda x:x.strip(' \t\n\r#').strip(),post.select(".//a[@class='uiLinkSubtle']/@href").extract()))
+        '''
+        
         return items
