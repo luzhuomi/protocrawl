@@ -32,110 +32,111 @@ def insert_to_mongo(data):
     db = init()
     try:
         data_json = json.loads(data)
-        user = data_json["user"]
-        u = None
-        if user.has_key("id") and user.has_key("name"):
-            exists =  User.objects.filter(uid = user["id"])
-            if exists:
-                u = exists[0]
-                print "user exists"
+        if data_json.has_key("user"):
+            user = data_json["user"]
+            u = None
+            if user.has_key("id") and user.has_key("name"):
+                exists =  User.objects.filter(uid = user["id"])
+                if exists:
+                    u = exists[0]
+                    print "user exists"
+                else:
+                    u = User(uid = user["id"], name = user["name"])
+                if user.has_key("favourites_count"):
+                    u.favourites_count = user["favourites_count"]
+                if user.has_key("friends_count"):
+                    u.favorites_count = user["friends_count"]
+                if user.has_key("following"):
+                    u.following = user["following"]
+                if user.has_key("followers_count"):
+                    u.followers_count = user["followers_count"]
+                if user.has_key("profile_image_url"):
+                    u.profile_image_url = user["profile_image_url"]
+                if user.has_key("contributors_enabled"):
+                    u.contributors_enabled = user["contributors_enabled"]
+                if user.has_key("geo_enabled"):
+                    u.geo_enabled = user["geo_enabled"]
+                if user.has_key("created_at"):
+                    u.created_at = parse(user["created_at"])
+                if user.has_key("description"):
+                    u.description = user["description"]
+                if user.has_key("listed_count"):
+                    u.listed_count = user["listed_count"]
+                if user.has_key("follow_request_sent"):
+                    u.follow_request_sent = user["follow_request_sent"]
+                if user.has_key("time_zone"):
+                    u.time_zone = user["time_zone"]
+                if user.has_key("url"):
+                    u.url = user["url"]
+                if user.has_key("verified"):
+                    u.verified = user["verified"]
+                if user.has_key("default_profile"):
+                    u.default_profile = user["default_profile"]
+                if user.has_key("show_all_inline_media"):
+                    u.show_all_inline_media = user["show_all_inline_media"]
+                if user.has_key("is_translator"):
+                    u.is_translator = user["is_translator"]
+                if user.has_key("notifications"):
+                    u.notifications = user["notifications"]
+                if user.has_key("protected"):
+                    u.protected = user["protected"]
+                if user.has_key("location"):
+                    u.location = user["location"]
+                if user.has_key("statuses_count"):
+                    u.statuses_count = user["statuses_count"]
+                if user.has_key("default_profile_image"):
+                    u.default_profile_image = user["default_profile_image"]
+                if user.has_key("lang"):
+                    u.lang = user["lang"]
+                if user.has_key("utc_offset"):
+                    u.utc_offset = user["utc_offset"]
+                if user.has_key("screen_name"):
+                    u.screen_name = user["screen_name"]
+                u.save()
             else:
-                u = User(uid = user["id"], name = user["name"])
-            if user.has_key("favourites_count"):
-                u.favourites_count = user["favourites_count"]
-            if user.has_key("friends_count"):
-                u.favorites_count = user["friends_count"]
-            if user.has_key("following"):
-                u.following = user["following"]
-            if user.has_key("followers_count"):
-                u.followers_count = user["followers_count"]
-            if user.has_key("profile_image_url"):
-                u.profile_image_url = user["profile_image_url"]
-            if user.has_key("contributors_enabled"):
-                u.contributors_enabled = user["contributors_enabled"]
-            if user.has_key("geo_enabled"):
-                u.geo_enabled = user["geo_enabled"]
-            if user.has_key("created_at"):
-                u.created_at = parse(user["created_at"])
-            if user.has_key("description"):
-                u.description = user["description"]
-            if user.has_key("listed_count"):
-                u.listed_count = user["listed_count"]
-            if user.has_key("follow_request_sent"):
-                u.follow_request_sent = user["follow_request_sent"]
-            if user.has_key("time_zone"):
-                u.time_zone = user["time_zone"]
-            if user.has_key("url"):
-                u.url = user["url"]
-            if user.has_key("verified"):
-                u.verified = user["verified"]
-            if user.has_key("default_profile"):
-                u.default_profile = user["default_profile"]
-            if user.has_key("show_all_inline_media"):
-                u.show_all_inline_media = user["show_all_inline_media"]
-            if user.has_key("is_translator"):
-                u.is_translator = user["is_translator"]
-            if user.has_key("notifications"):
-                u.notifications = user["notifications"]
-            if user.has_key("protected"):
-                u.protected = user["protected"]
-            if user.has_key("location"):
-                u.location = user["location"]
-            if user.has_key("statuses_count"):
-                u.statuses_count = user["statuses_count"]
-            if user.has_key("default_profile_image"):
-                u.default_profile_image = user["default_profile_image"]
-            if user.has_key("lang"):
-                u.lang = user["lang"]
-            if user.has_key("utc_offset"):
-                u.utc_offset = user["utc_offset"]
-            if user.has_key("screen_name"):
-                u.screen_name = user["screen_name"]
-            u.save()
-        else:
-            pass
-
-        if data_json.has_key("id") and u:
-            exists = Tweet.objects.filter( tid = data_json["id"])
-            if exists:
-                print "tweet exists"
                 pass
+
+            if data_json.has_key("id") and u:
+                exists = Tweet.objects.filter( tid = data_json["id"])
+                if exists:
+                    print "tweet exists"
+                    pass
+                else:
+                    t = Tweet(tid = data_json["id"])
+                    t.user = u
+                    if data_json.has_key("contributors"):
+                        t.contributors = data_json["contributors"]
+                    if data_json.has_key("place"):
+                        t.place = data_json["place"]
+                    if data_json.has_key("in_reply_to_screen_name"):
+                        t.in_reply_to_screen_name = data_json["in_reply_to_screen_name"]
+                    if data_json.has_key("text"):
+                        t.text = data_json["text"]
+                    if data_json.has_key("favorited"):
+                        t.favorited = data_json["favorited"]
+                    if data_json.has_key("coordinates"):
+                        t.coordinates = data_json["coordinates"]
+                    if data_json.has_key("geo"):
+                        t.geo = data_json["geo"]
+                    if data_json.has_key("retweet_count"):
+                        t.retweet_count = data_json["retweet_count"]
+                    if data_json.has_key("created_at"):
+                        t.created_at = parse(data_json["created_at"])
+                    if data_json.has_key("source"):
+                        t.source = data_json["source"]
+                    if data_json.has_key("in_reply_to_user_id"):
+                        t.in_reply_to_user_id = data_json["in_reply_to_user_id"]
+                    if data_json.has_key("in_reply_to_status_id"):
+                        t.in_reply_to_status_id = data_json["in_reply_to_status_id"]
+                    if data_json.has_key("retweeted"):
+                        t.retweeted = data_json["retweeted"]
+                    if data_json.has_key("truncated"):
+                        t.truncated = data_json["truncated"]
+                    if data_json.has_key("entities"):
+                        t.entities = data_json["entities"]
+                    t.save()
             else:
-                t = Tweet(tid = data_json["id"])
-                t.user = u
-                if data_json.has_key("contributors"):
-                    t.contributors = data_json["contributors"]
-                if data_json.has_key("place"):
-                    t.place = data_json["place"]
-                if data_json.has_key("in_reply_to_screen_name"):
-                    t.in_reply_to_screen_name = data_json["in_reply_to_screen_name"]
-                if data_json.has_key("text"):
-                    t.text = data_json["text"]
-                if data_json.has_key("favorited"):
-                    t.favorited = data_json["favorited"]
-                if data_json.has_key("coordinates"):
-                    t.coordinates = data_json["coordinates"]
-                if data_json.has_key("geo"):
-                    t.geo = data_json["geo"]
-                if data_json.has_key("retweet_count"):
-                    t.retweet_count = data_json["retweet_count"]
-                if data_json.has_key("created_at"):
-                    t.created_at = parse(data_json["created_at"])
-                if data_json.has_key("source"):
-                    t.source = data_json["source"]
-                if data_json.has_key("in_reply_to_user_id"):
-                    t.in_reply_to_user_id = data_json["in_reply_to_user_id"]
-                if data_json.has_key("in_reply_to_status_id"):
-                    t.in_reply_to_status_id = data_json["in_reply_to_status_id"]
-                if data_json.has_key("retweeted"):
-                    t.retweeted = data_json["retweeted"]
-                if data_json.has_key("truncated"):
-                    t.truncated = data_json["truncated"]
-                if data_json.has_key("entities"):
-                    t.entities = data_json["entities"]
-                t.save()
-        else:
-            pass
+                pass
     except ValueError,e:
         print "Value Error"
 
