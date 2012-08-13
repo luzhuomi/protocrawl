@@ -8,18 +8,22 @@ user_ids = [112724745, 66958905, 85558811, 21880585, 82026749, 22798391, 1875537
 
 def export(filename):
     db = init()
-    users = User.objects.filter(uid__in = user_ids)
-    tweets = Tweet.objects.filter(user__in = users)
-    f_out = open(filename,'w')
-    for t in tweets:
-        ln = "\t".join([str(t.user.uid),t.user.screen_name.encode('utf-8'),t.text.encode('utf-8'), str(t.created_at)])
-        print >> f_out, ln
+    try:
+        users = User.objects.filter(uid__in = user_ids)
+        tweets = Tweet.objects.filter(user__in = users)
+        f_out = open(filename,'w')
+        for t in tweets:
+            ln = "\t".join(map(str,[t.user.uid,t.user.screen_name,t.text, t.created_at]))
+            print >> f_out, ln
             
+    except:
+        print "error in connecting db"
 
-    if pymongo.version == '2.0.1':
-        db.connection.disconnect()
-    else:
-        db.disconnect()
+    finally:
+        if pymongo.version == '2.0.1':
+            db.connection.disconnect()
+        else:
+            db.disconnect()
 
     
     
