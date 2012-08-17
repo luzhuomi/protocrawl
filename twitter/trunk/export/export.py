@@ -12,7 +12,7 @@ def export(filename):
     tweets = Tweet.objects.filter(user__in = users)
     f_out = open(filename,'w')
     for t in tweets:
-        ln = "\t".join([str(t.user.uid),t.user.screen_name.encode('utf-8'),t.text.encode('utf-8').replace('\r',' ').replace('\n',' '), str(t.created_at)])
+        ln = "\t".join([str(t.created_at), str(t.user.uid),t.user.screen_name.encode('utf-8'),t.text.encode('utf-8').replace('\r',' ').replace('\n',' ').replace('\t',' ')])
         print >> f_out, ln
             
 
