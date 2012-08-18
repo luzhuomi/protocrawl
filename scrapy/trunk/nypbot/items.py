@@ -20,3 +20,9 @@ class PostWithPermaLink(Post):
     def __str__(self):
         return "Website: author_id=%s title=%s body=%s url=%s date_posted=%s perma_link=%s" % (self.get('author_id'), self.get('title'), self.get('body'), self.get('url'), self.get('date_posted'), self.get('perma_link'))
     
+
+class PostWithImage(Post):
+    image = Field()
+    def __str__(self):
+        return "Website: author_id=%s title=%s body=%s url=%s date_posted=%s image=%s" % (self.get('author_id'), self.get('title'), self.get('body'), self.get('url'), self.get('date_posted'), self.get('image'))
+        
