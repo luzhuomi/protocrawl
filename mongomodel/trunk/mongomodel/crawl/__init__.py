@@ -1,1 +1,1 @@
-from mongomodel.crawl import hwz,toc,twitter
+from mongomodel.crawl import hwz,toc,twitter,ninegag
