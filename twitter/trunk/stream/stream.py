@@ -1,4 +1,4 @@
-import pycurl, json, urllib2
+import pycurl, json, urllib2, sys
 from dateutil.parser import parse
 from mongomodel.crawl.twitter.models import *
 import pymongo
@@ -11,22 +11,35 @@ URL = "https://api.twitter.com/1/users/lookup.json?include_entities=true&screen_
 USER = "nypkenny"
 PASS = "abc123$%^"
 
-user_names = ["3pommesvertes","acefacesays","ang_moh","Angelnang","angiefeimao","animus128","ArtiztikVizion","AshleyBenlove","ashleykristen","badhex","bobfromhuddle","boris_gorelik","brandontarzis","brett227","brettgreene","bry_wong","Cherry_Chan","chris_reed","CjBayesian","clareholmes","crystaljeanwest","deadash08","debbchia","Delphine_mz","DoctorZen","Drastician","dubikan","dyanysus1116","Elyw","ericasheff","fellofff","finiteattention","huiwens","inspiredchris","irfanali1","itstracyp","jaber70","Jenx0","jijoei12","jillelswick","KathieKatKate","kellywashere","KohCheeSiang","koolbenny","le_Hutin","Livsforfashion","Lizzzielou","LornaQuandt","M_town_dan","markpolinsky","mathewy","Mbenti","mclangan","meggan","merry30","mick_bailey","miken_bu","moichita","moonbunnychan","moralcompas","MsMayaLynn","muchworsegames","muteddragon","naomicher","newnukem","ozzi2011","pablochacin","PatVitsky","pixiebeanz","pixiedub","raisinglight","rekinder","RORO_STYLE","rrifae","rubberbandgirl2","saraannk","scalawag","Schmalll","sha_nichole","socialneuro","SoozyJ","Stuarte","suefolley","sunshinyday","swanny","sylvereapleanan","tangrae","tarandip","tlamarca","tompollak","trisected","tweetyourtummy","twirlsandswirls","vishakamantri","webprotech","yoyoyokatty"]
+#user_names = ["3pommesvertes","acefacesays","ang_moh","Angelnang","angiefeimao","animus128","ArtiztikVizion","AshleyBenlove","ashleykristen","badhex","bobfromhuddle","boris_gorelik","brandontarzis","brett227","brettgreene","bry_wong","Cherry_Chan","chris_reed","CjBayesian","clareholmes","crystaljeanwest","deadash08","debbchia","Delphine_mz","DoctorZen","Drastician","dubikan","dyanysus1116","Elyw","ericasheff","fellofff","finiteattention","huiwens","inspiredchris","irfanali1","itstracyp","jaber70","Jenx0","jijoei12","jillelswick","KathieKatKate","kellywashere","KohCheeSiang","koolbenny","le_Hutin","Livsforfashion","Lizzzielou","LornaQuandt","M_town_dan","markpolinsky","mathewy","Mbenti","mclangan","meggan","merry30","mick_bailey","miken_bu","moichita","moonbunnychan","moralcompas","MsMayaLynn","muchworsegames","muteddragon","naomicher","newnukem","ozzi2011","pablochacin","PatVitsky","pixiebeanz","pixiedub","raisinglight","rekinder","RORO_STYLE","rrifae","rubberbandgirl2","saraannk","scalawag","Schmalll","sha_nichole","socialneuro","SoozyJ","Stuarte","suefolley","sunshinyday","swanny","sylvereapleanan","tangrae","tarandip","tlamarca","tompollak","trisected","tweetyourtummy","twirlsandswirls","vishakamantri","webprotech","yoyoyokatty"]
 
+
+MAX_TERM_ALLOWED = 75
+
+def split_list_by(l,n):
+    rounds = len(l) / n
+    result = []
+    for i in range(0,rounds+1):
+        if i*n < len(l):
+            result.append(l[i*n:(i+1)*n])
+    return result
 
 def get_userids(usernames):
-    url = URL+','.join(usernames)
-    print url
-    f = urllib2.urlopen(url)
-    userids = map(lambda x:x['id'] ,json.loads(f.read()))
-    f.close()
+    batches = split_list_by(usernames, MAX_TERM_ALLOWED)
+    userids = []
+    for batch in batches:
+        url = URL+','.join(batch)
+        print url
+        f = urllib2.urlopen(url)
+        userids = userids + map(lambda x:x['id'] ,json.loads(f.read()))
+        f.close()
     print userids
     return userids
 
 def get_userids_file(infile):
     inh = open(infile,'r')
     unames = []
-    for ln in outh:
+    for ln in inh:
         s = ln.strip('\r\n"')
         unames.append(s)
     inh.close()
@@ -166,11 +179,11 @@ def on_receive(data):
     print data    
     insert_to_mongo(data)
 
-if len(sys.arg) < 1:
+if len(sys.argv) < 1:
     print "Usage: stream.py <user_id file>"
     sys.exit(1)
 
-user_ids = get_userids_file(sys.arg[1])
+user_ids = get_userids_file(sys.argv[1])
 
 conn = pycurl.Curl()
 conn.setopt(pycurl.USERPWD, "%s:%s" % (USER, PASS))
