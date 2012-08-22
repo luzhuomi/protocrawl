@@ -1,4 +1,4 @@
-import pycurl, json, urllib2, sys
+import pycurl, json, urllib2, sys, sets
 from dateutil.parser import parse
 from mongomodel.crawl.twitter.models import *
 import pymongo
@@ -31,7 +31,10 @@ def get_userids(usernames):
         url = URL+','.join(batch)
         print url
         f = urllib2.urlopen(url)
-        userids = userids + map(lambda x:x['id'] ,json.loads(f.read()))
+        j = json.loads(f.read())
+        userids = userids + map(lambda x:x['id'] ,j)
+        found = Set(map(lambda x:lower(x['screenname'].lower()), j))
+        print "missing" + str(Set(map(lambda x:x.lower(), usernames)) - found)
         f.close()
     print userids
     return userids
