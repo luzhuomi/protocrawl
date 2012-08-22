@@ -33,8 +33,8 @@ def get_userids(usernames):
         f = urllib2.urlopen(url)
         j = json.loads(f.read())
         userids = userids + map(lambda x:x['id'] ,j)
-        found = Set(map(lambda x:lower(x['screenname'].lower()), j))
-        print "missing" + str(Set(map(lambda x:x.lower(), usernames)) - found)
+        found = sets.Set(map(lambda x:lower(x['screenname'].lower()), j))
+        print "missing" + str(sets.Set(map(lambda x:x.lower(), usernames)) - found)
         f.close()
     print userids
     return userids
