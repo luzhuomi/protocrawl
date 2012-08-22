@@ -34,7 +34,7 @@ def get_userids(usernames):
         j = json.loads(f.read())
         userids = userids + map(lambda x:x['id'] ,j)
         found = sets.Set(map(lambda x:x['screen_name'].lower(), j))
-        print "missing" + str(sets.Set(map(lambda x:x.lower(), usernames)) - found)
+        print "missing" + str(sets.Set(map(lambda x:x.lower(), batch)) - found)
         f.close()
     print userids
     return userids
