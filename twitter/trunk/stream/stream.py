@@ -197,8 +197,12 @@ def loop(retry):
         conn.perform()
     except:
         if retry > 0:
+            print "="*20
+            print "retrying..."
             loop(retry-1)
         else:
+            print "="*20            
+            print "no more retry, exiting..."
             sys.exit(0)
 
 loop(5)
