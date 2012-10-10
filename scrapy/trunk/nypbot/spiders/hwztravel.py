@@ -54,7 +54,7 @@ class HwzSpider(CrawlSpider):
                           body=item.get('body'),
                           title=item.get('title'),
                 date_posted=parse(normalizeFriendlyDate(item.get('date_posted'))))
-            rs = Message.objects.filter(forum = name, author_id = art.author_id, url= art.url, date_posted = art.date_posted)
+            rs = Message.objects.filter(forum = self.name, author_id = art.author_id, url= art.url, date_posted = art.date_posted)
             if len(rs) == 0:
                 try: 
                     art.save()
