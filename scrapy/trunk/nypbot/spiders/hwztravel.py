@@ -48,7 +48,7 @@ class HwzSpider(CrawlSpider):
         db = init()
         
         for item in posts:
-            art = Message(forum = name,
+            art = Message(forum = self.name,
                           url=item.get('url'),
                           author_id=item.get('author_id'),
                           body=item.get('body'),
