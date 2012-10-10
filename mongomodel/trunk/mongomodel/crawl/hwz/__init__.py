@@ -1,1 +1,1 @@
-from mongomodel.crawl.hwz.models import Article, init
+from mongomodel.crawl.hwz.models import Article, init, Message

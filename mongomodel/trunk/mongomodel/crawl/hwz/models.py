@@ -9,7 +9,7 @@ def init(host='127.0.0.1',username='nypuser',password='p455w0rd'):
 	db.slave_ok = True
 	return db
 
-class Article(Document):
+class Article(Document): # old one, current affair is here.
 	url = StringField(required=True)
 	author_id = StringField(required=True)
 	body = StringField()
@@ -21,3 +21,15 @@ class Article(Document):
 	}
 
 
+class Message(Document): # new one, everything else 
+	forum = StringField(required=True)
+	url = StringField(required=True)
+	author_id = StringField(required=True)
+	body = StringField()
+	title = StringField()
+	date_posted = DateTimeField(required=True)
+	
+	meta = {
+		'indexes': ['forum', 'url', 'author_id', 'date_posted'],
+	}
+	
