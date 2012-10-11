@@ -1,4 +1,4 @@
-import pycurl, json, urllib2
+import pycurl, json, urllib2, sys, sets
 from dateutil.parser import parse
 from mongomodel.crawl.twitter.models import *
 import pymongo
@@ -12,14 +12,42 @@ USER = "nypkenny"
 PASS = "abc123$%^"
 
 
+
+MAX_TERM_ALLOWED = 75
+
+def split_list_by(l,n):
+    rounds = len(l) / n
+    result = []
+    for i in range(0,rounds+1):
+        if i*n < len(l):
+            result.append(l[i*n:(i+1)*n])
+    return result
+
 def get_userids(usernames):
-    url = URL+','.join(usernames)
-    print url
-    f = urllib2.urlopen(url)
-    userids = map(lambda x:x['id'] ,json.loads(f.read()))
-    f.close()
+    batches = split_list_by(usernames, MAX_TERM_ALLOWED)
+    userids = []
+    for batch in batches:
+        url = URL+','.join(batch)
+        print url
+        f = urllib2.urlopen(url)
+        j = json.loads(f.read())
+        userids = userids + map(lambda x:x['id'] ,j)
+        found = sets.Set(map(lambda x:x['screen_name'].lower(), j))
+        print "missing" + str(sets.Set(map(lambda x:x.lower(), batch)) - found)
+        f.close()
     print userids
     return userids
+
+def get_userids_file(infile):
+    inh = open(infile,'r')
+    unames = []
+    for ln in inh:
+        s = ln.strip('\r\n"')
+        unames.append(s)
+    inh.close()
+    uids = get_userids(unames)
+    return uids
+
 
 def insert_to_mongo(data):
     db = init()
@@ -148,12 +176,31 @@ def on_receive(data):
     print data    
     insert_to_mongo(data)
 
+if len(sys.argv) < 1:
+    print "Usage: stream.py <user_id file>"
+    sys.exit(1)
 
-conn = pycurl.Curl()
-conn.setopt(pycurl.USERPWD, "%s:%s" % (USER, PASS))
-conn.setopt(pycurl.URL, STREAM_URL+','.join(map(str,user_ids)))
-conn.setopt(pycurl.WRITEFUNCTION, on_receive)
-conn.perform()
+user_ids = get_userids_file(sys.argv[1])
+
+def loop(retry):
+    try:
+        conn = pycurl.Curl()
+        conn.setopt(pycurl.USERPWD, "%s:%s" % (USER, PASS))
+        conn.setopt(pycurl.URL, STREAM_URL+','.join(map(str,user_ids)))
+        conn.setopt(pycurl.WRITEFUNCTION, on_receive)
+        conn.perform()
+    except:
+        if retry > 0:
+            print "="*20
+            print "retrying..."
+            loop(retry-1)
+        else:
+            print "="*20            
+            print "no more retry, exiting..."
+            sys.exit(0)
+
+loop(5)
+    
 
 s1 = '{"in_reply_to_status_id_str":null,"contributors":null,"place":null,"in_reply_to_screen_name":null,"text":"Test","favorited":false,"in_reply_to_user_id_str":null,"coordinates":null,"geo":null,"retweet_count":0,"created_at":"Fri Jul 13 09:38:00 +0000 2012","source":"web","in_reply_to_user_id":null,"in_reply_to_status_id":null,"retweeted":false,"id_str":"223712876576260096","truncated":false,"user":{"favourites_count":10,"friends_count":42,"profile_background_color":"C6E2EE","following":null,"profile_background_tile":false,"profile_background_image_url_https":"https:\/\/si0.twimg.com\/images\/themes\/theme2\/bg.gif","followers_count":38,"profile_image_url":"http:\/\/a0.twimg.com\/profile_images\/60558692\/KennyMugShot_normal.jpg","contributors_enabled":false,"geo_enabled":false,"created_at":"Tue Sep 23 03:08:29 +0000 2008","profile_sidebar_fill_color":"DAECF4","description":"Circos.com, Computer Science, Phd, National University of Singapore","listed_count":1,"follow_request_sent":null,"time_zone":"Singapore","url":"http:\/\/sites.google.com\/site\/luzhuomi\/","verified":false,"profile_sidebar_border_color":"C6E2EE","default_profile":false,"show_all_inline_media":false,"is_translator":false,"notifications":null,"profile_use_background_image":true,"protected":false,"profile_image_url_https":"https:\/\/si0.twimg.com\/profile_images\/60558692\/KennyMugShot_normal.jpg","location":"Singapore","id_str":"16414559","profile_text_color":"663B12","name":"Kenny","statuses_count":199,"profile_background_image_url":"http:\/\/a0.twimg.com\/images\/themes\/theme2\/bg.gif","id":16414559,"default_profile_image":false,"lang":"en","utc_offset":28800,"profile_link_color":"1F98C7","screen_name":"luzm"},"id":223712876576260096,"entities":{"user_mentions":[],"urls":[],"hashtags":[]}}'
 
