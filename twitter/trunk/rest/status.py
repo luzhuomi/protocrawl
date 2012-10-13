@@ -69,7 +69,7 @@ def get_status(api,screenname):
                     t.in_reply_to_status_id = status.in_reply_to_status_id
                     t.retweeted = status.retweeted
                     t.truncated = status.truncated
-                    t.entities = status.entities
+                    # t.entities = status.entities
                     t.save()
                 print status.text
         
@@ -79,9 +79,17 @@ def main():
         consumer_secret=CONSUMER_SECRET,
         access_token_key=ACCESS_TOKEN_KEY,
         access_token_secret=ACCESS_TOKEN_SECRET)
-    users=['luzm']
+    user_file = open(sys.argv[1],'r')
+    users=[]
+    for ln in user_file:
+        users = users + ln.strip('\r\n').split(',')
+    db = init()
     for user in users:
         get_status(api,user)
+    if pymongo.version == '2.0.1':
+        db.connection.disconnect()
+    else:
+        db.disconnect()    
 
 """
 >>> dir(statuses[0])
