@@ -9,6 +9,20 @@ ACCESS_TOKEN_KEY='634391884-qFKI6JYrZV6JFQYHIFhConcn7S1Se86SP0YHHWDt'
 ACCESS_TOKEN_SECRET='zcUKICiN4GWYrS7cyOBHyiJCHqeyjMGn3J7GfwVWrZ8'
 
 
+def read_cred(file):
+    in_handle = open(file,'r')
+    cred = {}
+    for ln in in_handle:
+        data = ln.strip('\r\n').split('=')
+        if len(data) > 1:
+            key = data[0].strip(' ').lower()
+            value = data[1].strip(' ')
+            cred[key] = value
+        else:
+            print "error in parsing credentials file"
+    return cred
+
+
 def get_status(api,screenname):
     for p in range(1,21):
         statuses = api.GetUserTimeline(screenname,page=p)
@@ -74,11 +88,12 @@ def get_status(api,screenname):
                 print status.text
         
 def main():
+    cred = read_cred(sys.argv[1])        
     api = twitter.Api(
-        consumer_key=CONSUMER_KEY,
-        consumer_secret=CONSUMER_SECRET,
-        access_token_key=ACCESS_TOKEN_KEY,
-        access_token_secret=ACCESS_TOKEN_SECRET)
+        consumer_key=cred['consumer_key'],
+        consumer_secret=cred['consumer_secret'],
+        access_token_key=cred['access_token_key'],
+        access_token_secret=cred['access_token_secret'])
     user_file = open(sys.argv[1],'r')
     users=[]
     for ln in user_file:

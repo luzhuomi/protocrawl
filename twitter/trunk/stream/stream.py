@@ -8,10 +8,6 @@ STREAM_URL = "https://stream.twitter.com/1/statuses/filter.json?follow="
 #STREAM_URL= "https://stream.twitter.com/1/statuses/sample.json"
 URL = "https://api.twitter.com/1/users/lookup.json?include_entities=true&screen_name="
 
-USER = "nypkenny"
-PASS = "abc123$%^"
-
-
 
 MAX_TERM_ALLOWED = 75
 
@@ -159,8 +155,8 @@ def insert_to_mongo(data):
             else:
                 pass
     except ValueError,e:
-        print "Value Error"
-        raise e
+        print "Value Error %s " % (data)
+        # raise e
 
 
     if pymongo.version == '2.0.1':
@@ -180,12 +176,28 @@ if len(sys.argv) < 1:
     print "Usage: stream.py <user_id file>"
     sys.exit(1)
 
-user_ids = get_userids_file(sys.argv[1])
+user_ids = get_userids_file(sys.argv[2])
+
+
+def read_cred(file):
+    in_handle = open(file,'r')
+    cred = {}
+    for ln in in_handle:
+        data = ln.strip('\r\n').split('=')
+        if len(data) > 1:
+            key = data[0].strip(' ').lower()
+            value = data[1].strip(' ')
+            cred[key] = value
+        else:
+            print "error in parsing credentials file"
+    return cred
+
 
 def loop(retry):
     try:
+        cred = read_cred(sys.argv[1])        
         conn = pycurl.Curl()
-        conn.setopt(pycurl.USERPWD, "%s:%s" % (USER, PASS))
+        conn.setopt(pycurl.USERPWD, "%s:%s" % (cred['user'], cred['password']))
         conn.setopt(pycurl.URL, STREAM_URL+','.join(map(str,user_ids)))
         conn.setopt(pycurl.WRITEFUNCTION, on_receive)
         conn.perform()
