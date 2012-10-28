@@ -1,14 +1,62 @@
-<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
-<html> <head>
+<!DOCTYPE HTML>
+<html>
+
+<head>
 <title></title>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js">
+</script>
+<script type="text/javascript" src="http://yui.yahooapis.com/3.5.1/build/yui/yui-min.js"></script>
+<script type="text/javascript" src="{{ settings.STATIC_MEDIA_PREFIX }}/js/FusionCharts.js"></script>
+<script type="text/javascript">
+YUI({
+    //Last Gallery Build of this module
+    gallery: 'gallery-2012.05.16-20-37'
+}).use('gallery-layout-rows', function(Y)
+{
+  // instantiate the component -- automatically scans the DOM
+  var layout = new Y.PageLayout();
+});
+</script>
+
 </head>
 
 <body>
 <h1></h1>
 
+<div class="layout-bd">
+<div class="layout-module-row">
+  <div class="layout-module height:10%">
+    {% include "main/filter.html" %}
+  </div>
+</div>
 
+<div class="layout-module-row">
+   <div class="layout-module-col">
+      <div class="layout-module">
+	   {% include "main/mood_widget.html" %}
+      </div>      
+      <div class="layout-module width:50%">
+	<div class="widget">
+	  <script type="text/javascript">
+	  window.myobj = {
+	  markerOver: function() { this.openInfoWindow(); },
+	  markerOut: function() { this.closeInfoWindow(); }
+	  }; 
+	  </script> 
+	  {{ form.map }}
+	  {{ form.media.js }}
+	</div>
+      </div>
+      <div class="layout-module">
+	   {% include "main/profile_widget.html" %}
+      </div>      
+      <div class="layout-module width:50%">
+      	   {% include "main/tweet_widget.html" %}
+      </div>      
+   </div>
+</div>
+<!-- {% include "main/map_widget.html" %} -->
 
-<hr>
-<address></address>
-<!-- hhmts start -->Last modified: Fri Oct 26 15:28:11 SGT 2012 <!-- hhmts end -->
+</div>
+
 </body> </html>

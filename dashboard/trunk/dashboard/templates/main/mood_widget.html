@@ -1,0 +1,39 @@
+<div id="mood_widget" class="widget">
+     <div><!-- FusionChart -->
+     	       <div id="mood_fc_div"><div class="widget-initial-content"></div></div>
+     </div>
+</div>
+<script type="text/javascript">
+var mood_widget = (function () {
+    var render_div_id = "mood_fc_div";
+    var chart_id = "mood_fc";
+    var chart_width = "450";
+    var chart_height = "450";
+    return {
+        initialized: false,
+	overlay: null,
+	contentLoaded: false,
+
+	update   : function () {
+		 var chartDataUrl  = "/mood/" + "{{age_band}}" + "/" + "{{gender}}" + "/" + "{{race}}" + "/";
+
+		 this.chart = new FusionCharts(
+		      "{{settings.STATIC_MEDIA_PREFIX}}/Radar.swf?ChartNoDataText=The selected filter settings yield no results.",
+		      chart_id,
+		      chart_width,
+		      chart_height,
+		      "0", "1"
+		      );
+		 this.chart.setDataURL(chartDataUrl);
+		 this.chart.render(render_div_id);
+		 this.chart_initialized = true;
+		 this.prev_type = '3';
+
+	}, // the callbacks
+	init     : function () {
+	}
+    }
+})();
+mood_widget.init();
+mood_widget.update();
+</script>

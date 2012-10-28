@@ -1,0 +1,58 @@
+<div id="profile_widget" class="widget">
+     <div><!-- FusionChart -->
+         <div id="profile_fc_div_age_band"><div class="widget-initial-content"></div></div>
+     </div>
+     <div><!-- FusionChart -->
+         <div id="profile_fc_div_gender"><div class="widget-initial-content"></div></div>
+     </div>
+     <div><!-- FusionChart -->
+         <div id="profile_fc_div_race"><div class="widget-initial-content"></div></div>
+     </div>
+</div>
+<script type="text/javascript">
+var profile_widget = (function (div_id, dimension) {
+    var render_div_id = div_id;
+    var chart_id = div_id + "_fc";
+    var chart_width = "450";
+    var chart_height = "150";
+    return {
+        initialized: false,
+	overlay: null,
+	contentLoaded: false,
+
+	update   : function () {
+		 var chartDataUrl  = "/profile/" + dimension + "/";
+
+		 this.chart = new FusionCharts(
+		      "{{settings.STATIC_MEDIA_PREFIX}}/MSBar2D.swf?ChartNoDataText=The selected filter settings yield no results.",
+		      chart_id,
+		      chart_width,
+		      chart_height,
+		      "0", "1"
+		      );
+		 this.chart.setDataURL(chartDataUrl);
+		 this.chart.render(render_div_id);
+		 this.chart_initialized = true;
+
+	}, // the callbacks
+	init     : function () {
+	}
+    }
+});
+var age_band_profile_widget =
+	profile_widget("profile_fc_div_age_band", "age_band");
+var gender_profile_widget =
+	profile_widget("profile_fc_div_gender", "gender");
+var race_profile_widget =
+	profile_widget("profile_fc_div_race", "race");
+
+age_band_profile_widget.init();
+age_band_profile_widget.update();
+
+gender_profile_widget.init();
+gender_profile_widget.update();
+
+race_profile_widget.init();
+race_profile_widget.update();
+
+</script>

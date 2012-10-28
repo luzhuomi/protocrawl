@@ -1,0 +1,26 @@
+<chart caption="Mood Analysis" bgcolor="ffffff" anchoralpha="0" basefont="calibri" basefontsize="13" basefontcolor="3E3E3F" bordercolor="6FACD1" captionpadding="20" radarFillColor="FFFFFF" >
+   <categories>
+      <category label="Joy" />
+      <category label="Surprised" />
+      <category label="Sadness" />
+      <category label="Anger" />
+      <category label="Disgusted" />
+   </categories>
+   <dataset seriesName="Mood Distribution" color="68D740" anchorbgcolor="77C55B">
+      <set value="{{mood.joy}}" />
+      <set value="{{mood.surprised}}" />
+      <set value="{{mood.sadness}}" />
+      <set value="{{mood.anger}}" />
+      <set value="{{mood.disgusted}}" />
+   </dataset>
+<styles>
+<definition>
+<style name="Font_0" type="font" font="Calibri" size="17" color="2F2F2F" bold="1" underline="1" isHTML="0"/>
+<style type="Bevel" name="Bevel_0" angle="170" Distance="6" shadowAlpha="90"  blurX="6"/>
+</definition>
+<application>
+<apply toObject="CAPTION" styles="Font_0"/>
+<apply toObject="DATAPLOT" styles="Bevel_0"/>
+</application>
+</styles>
+</chart>

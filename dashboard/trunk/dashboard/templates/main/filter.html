@@ -1,0 +1,63 @@
+<div id="filter">
+  <form action="." method="get">
+  <p>
+  <label for="age_band">Age Band</label>
+  <select id="age_band" name="age_band">
+    <option value = "all">All</option>    
+    <option value = "18-24">18-24</option>
+    <option value = "25-34">25-34</option>
+    <option value = "35-44">35-44</option>
+    <option value = "45-54">45-54</option>
+    <option value = "55-59">55-59</option>
+    <option value = "60-100">60-100</option>    
+  </select>
+  </p>
+  <p>
+  <label for="gender">Gender</label>
+  <select id="gender" name="gender">
+    <option value = "all">All</option>
+    <option value = "female">Female</option>
+    <option value = "male">Male</option>
+  </select>
+  </p>  
+  <p>
+  <label for="race">Race</label>
+  <select id="race" name="race">
+    <option value = "all">All</option>
+    <option value = "chinese">Chinese</option>
+    <option value = "indian">Indian</option>
+    <option value = "malay">Malay</option>
+    <option value = "others">Others</option>            
+  </select>
+  </p>
+  <input type="submit" value="Submit"/>
+  </form>
+</div>
+
+<script type="text/javascript">
+var filter = (function () {
+    return {
+    	age_band : $("#age_band").val(),
+	gender   : $("#gender").val(),
+	race     : $("#race").val(),
+	update   : null, // the callbacks
+	init     : function () {
+	   $("#age_band").val('{{age_band}}');
+	   $("#gender").val('{{gender}}');
+	   $("#race").val('{{race}}');
+           var self = this;
+           $("#age_band").change(function () {
+	        self.age_band = $("#age_band").val();
+		console.log("hi");
+	   });
+           $("#gender").change(function () {
+	        self.gender = $("#gender").val();
+	   });
+           $("#race").change(function () {
+	        self.race = $("#race").val();
+	   });
+	}
+    }
+})();
+filter.init();
+</script>

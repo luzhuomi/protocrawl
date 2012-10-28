@@ -1,0 +1,22 @@
+<div id="map_widget">
+  <div id="map_container"></div>
+</div>
+
+<script type="text/javascript">
+var map_widget = (function () {
+    return {
+	update   : function () {
+	   $.get("/map/", { },
+	      function(data) {
+	         console.log(data);
+	         $("#map_container").html(data);
+	      }
+	   );
+	}, // the callbacks
+	init     : function () {
+	}
+    }
+})();
+map_widget.init();
+map_widget.update();
+</script>

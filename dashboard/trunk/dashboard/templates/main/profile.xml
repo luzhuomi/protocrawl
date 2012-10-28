@@ -1,0 +1,8 @@
+<chart palette="2" caption="Profile comparison by {{dimension_name}}" showLabels="1" showvalues="0" decimals="0" numberPrefix="">
+<categories><category label="Count" /></categories>
+{% for key,value in dict.items %}
+<dataset seriesName="{{key}}" color="AFD8F8" showValues="0">
+<set value="{{value}}" />
+</dataset>
+{% endfor %}
+</chart>

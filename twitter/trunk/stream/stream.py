@@ -195,7 +195,7 @@ def read_cred(file):
 
 def loop(retry):
     try:
-        cred = read_cred(sys.argv[1])        
+        cred = read_cred(sys.argv[1])
         conn = pycurl.Curl()
         conn.setopt(pycurl.USERPWD, "%s:%s" % (cred['user'], cred['password']))
         conn.setopt(pycurl.URL, STREAM_URL+','.join(map(str,user_ids)))
