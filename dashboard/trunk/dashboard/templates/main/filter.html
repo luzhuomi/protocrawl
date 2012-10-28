@@ -1,6 +1,6 @@
-<div id="filter">
+<div id="filter_container">
   <form action="." method="get">
-  <p>
+  <div class="filter">
   <label for="age_band">Age Band</label>
   <select id="age_band" name="age_band">
     <option value = "all">All</option>    
@@ -11,16 +11,16 @@
     <option value = "55-59">55-59</option>
     <option value = "60-100">60-100</option>    
   </select>
-  </p>
-  <p>
+  </div>
+  <div class="filter">
   <label for="gender">Gender</label>
   <select id="gender" name="gender">
     <option value = "all">All</option>
     <option value = "female">Female</option>
     <option value = "male">Male</option>
   </select>
-  </p>  
-  <p>
+  </div>  
+  <div class="filter">
   <label for="race">Race</label>
   <select id="race" name="race">
     <option value = "all">All</option>
@@ -29,8 +29,10 @@
     <option value = "malay">Malay</option>
     <option value = "others">Others</option>            
   </select>
-  </p>
-  <input type="submit" value="Submit"/>
+  </div>
+  <div class="filter">
+    <input type="submit" value="Submit"/>
+  </div>
   </form>
 </div>
 

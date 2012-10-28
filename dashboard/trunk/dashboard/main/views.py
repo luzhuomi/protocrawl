@@ -17,7 +17,7 @@ from dashboard.main.models import Tweet
 
 
 class MapForm(forms.Form):
-	map = forms.Field(widget=GoogleMap(attrs={'width':450, 'height':450}))
+	map = forms.Field(widget=GoogleMap(attrs={'width':550, 'height':450}))
 
 
 
@@ -76,7 +76,7 @@ def home(request):
 		dict[loc][t.mood] += 1
 	#print dict 
 	gmap = maps.Map(opts = {
-		'center': maps.LatLng(1.264347, 103.823242),
+		'center': maps.LatLng(1.263347, 103.823242),
 		'mapTypeId': maps.MapTypeId.ROADMAP,
 		'zoom': 14,
 		'mapTypeControlOptions': {
@@ -91,8 +91,8 @@ def home(request):
 		
 		maps.event.addListener(marker, 'mouseover', 'myobj.markerOver')
 		maps.event.addListener(marker, 'mouseout', 'myobj.markerOut')
-		# mesg = "location : %s <br/> joy : %d <br/> surprised : %d <br/> sadness : %d <br/> anger : %d <br/> disgusted : %d" % (key, val["joy"], val["surprised"], val["sadness"], val["anger"], val["disgusted"])
-		mesg = "location : %s <br/> <img src='https://chart.googleapis.com/chart?cht=p&chd=t:%d,%d,%d,%d,%d&chs=300x120&chdl=joy|surprised|sadness|anger|disgusted&chl=%d|%d|%d|%d|%d'/>" % (key, val["joy"], val["surprised"], val["sadness"], val["anger"], val["disgusted"], val["joy"], val["surprised"], val["sadness"], val["anger"], val["disgusted"])
+		# mesg = "%s <br/> joy : %d <br/> surprised : %d <br/> sadness : %d <br/> anger : %d <br/> disgusted : %d" % (key, val["joy"], val["surprised"], val["sadness"], val["anger"], val["disgusted"])
+		mesg = "%s <br/> <img src='https://chart.googleapis.com/chart?chco=74ACD1,738DD1,D1737D,D1C773,A2A2A2,1E425A&cht=p&chd=t:%d,%d,%d,%d,%d&chs=300x120&chdl=joy|surprised|sadness|anger|disgusted&chl=%d|%d|%d|%d|%d'/>" % (key, val["joy"], val["surprised"], val["sadness"], val["anger"], val["disgusted"], val["joy"], val["surprised"], val["sadness"], val["anger"], val["disgusted"])
 		info = maps.InfoWindow({
 			'content': mesg ,
 			'disableAutoPan': True
@@ -168,11 +168,29 @@ def map(request):
 
 
 
-def tweet_ajax(request):
+def tweet_ajax(request,page_index,page_size):
 	results = fetch_results(request)
-	tweets = [ result.tweet for result in results ] 
-
+	page_index = int(page_index)
+	page_size = int(page_size)
+	tweets = []
+	
+	style = "even"
+	for result in results:
+		tweets.append({ "text" : result.tweet.replace('\/','/'), "style" : style })
+		if style == "even":
+			style = "odd"
+		else:
+			style = "even"
+	tweets = tweets[(page_index*page_size):((page_index+1)*page_size)]
 	return HttpResponse(simplejson.dumps(tweets))
+
+
+def tweet_total_ajax(request, page_size):
+	page_size = int(page_size)
+	results = fetch_results(request)
+	value = { "total" : len(results),
+		  "page_total" : len(results) / page_size }
+	return HttpResponse(simplejson.dumps(value))
 
 
 def mood_ajax(request, age_band, gender, race):
@@ -183,8 +201,8 @@ def mood_ajax(request, age_band, gender, race):
 	context = { "mood": dict }
 	return render_to_response('main/mood.xml', context)
 
-def profile_ajax(request,dimension):
-	results = fetch_results(request)
+def profile_ajax(request, age_band, gender, race, dimension):
+	results = fetch_results_inner(age_band, gender, race)
 
 	dict = {}
 	f = lambda x : x.race
@@ -200,8 +218,13 @@ def profile_ajax(request,dimension):
 			dict[f(result)] +=1
 		else:
 			dict[f(result)] =1
-
-	context = { "dict" : dict,
+	final = []
+	i = 0
+	colors = ["74ACD1","738DD1","D1737D","D1C773","A2A2A2","1E425A", "D173AB", "C773D1" ]
+	for key,value in dict.items():
+		final.append( { "name" : key, "count": value, "style" : colors[i] })
+		i+=1
+	context = { "final" : final,
 		    "dimension" : dimension,
 		    "dimension_name" : dimension.replace('_', ' ')}
 	return render_to_response('main/profile.xml', context)

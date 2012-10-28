@@ -1,0 +1,33 @@
+#filter_container { 
+    margin-left:621px;
+}
+
+.filter { 
+    float:left;
+    margin:10px 10px 10px 10px;
+}
+
+.widget { 
+    margin:10px 10px 10px 10px;
+    width:550px;
+    height:450px;
+    vertical-align:center;
+}
+
+td {
+    padding-top:3px;
+    padding-left:5px;
+    padding-right:5px;
+    padding-bottom:3px;
+}
+
+.odd {
+}
+
+.even {
+    background-color:#E1E1E1;
+}
+
+.paginator {
+    float:right;
+}

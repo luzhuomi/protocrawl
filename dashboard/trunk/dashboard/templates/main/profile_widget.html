@@ -13,7 +13,7 @@
 var profile_widget = (function (div_id, dimension) {
     var render_div_id = div_id;
     var chart_id = div_id + "_fc";
-    var chart_width = "450";
+    var chart_width = "550";
     var chart_height = "150";
     return {
         initialized: false,
@@ -21,7 +21,7 @@ var profile_widget = (function (div_id, dimension) {
 	contentLoaded: false,
 
 	update   : function () {
-		 var chartDataUrl  = "/profile/" + dimension + "/";
+		 var chartDataUrl  = "/profile/" + "{{age_band}}" + "/" + "{{gender}}" + "/" + "{{race}}" + "/" + dimension + "/";
 
 		 this.chart = new FusionCharts(
 		      "{{settings.STATIC_MEDIA_PREFIX}}/MSBar2D.swf?ChartNoDataText=The selected filter settings yield no results.",

@@ -1,17 +1,25 @@
 <div id="tweet_widget" class="widget">
   <div id="tweet_container"></div>
+  <div class="paginator">
+	<input type="button" id="tweet_prev" value="Prev"></input>
+	<span id="pg_num"></span> of <span id="pg_total"></span>
+    	<input type="button" id="tweet_next" value="Next"></input>
+  </div>
 </div>
 
 <script type="text/javascript">
 var tweet_widget = (function () {
     return {
+    	page_total : 0,
+    	page_size : 10,
+	page_index : 0,
 	update   : function () {
-	   $.getJSON("/tweet/", { age_band : "{{age_band}}", gender :"{{gender}}", race : "{{race}}" },
+	   $.getJSON("/tweet/"+this.page_index +"/"+this.page_size+"/", { age_band : "{{age_band}}", gender :"{{gender}}", race : "{{race}}" },
 	      function(data) {
 	         var body_html = '<table>';
 		 $.each(data, function(i, tweet) {
 		       body_html +=
-		          '<tr><td class="fl">' + tweet + '</td></tr>';
+		          '<tr class="' +  tweet.style + '"><td class="fl">' + tweet.text + '</td></tr>';
 		 })
 	 	 body_html += '</table>';
 	         $("#tweet_container").html(body_html);
@@ -19,6 +27,29 @@ var tweet_widget = (function () {
 	   );
 	}, // the callbacks
 	init     : function () {
+		 var self = this;
+		 $.getJSON("/tweet/total/"+self.page_size+"/", { age_band :"{{age_band}}", gender :"{{gender}}", race : "{{race}}" },
+		    function(data) {
+		      self.page_total = data.page_total;
+		      $("#pg_num").html(self.page_index+1);
+		      $("#pg_total").html(self.page_total+1);
+		 });
+		 $("#tweet_prev").click(function () {
+		   console.log("prev");
+		   if (self.page_index > 0) {
+		      self.page_index -= 1;
+		      self.update();
+		      $("#pg_num").html(self.page_index+1);
+		   }
+		 });
+		 $("#tweet_next").click(function () {
+		   console.log("next");
+		   if (self.page_index < self.page_total) {
+		      self.page_index += 1;
+		      self.update();
+		      $("#pg_num").html(self.page_index+1);		 
+		   }
+		 });		 
 	}
     }
 })();
