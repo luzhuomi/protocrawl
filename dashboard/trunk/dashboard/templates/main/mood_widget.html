@@ -15,7 +15,7 @@ var mood_widget = (function () {
 	contentLoaded: false,
 
 	update   : function () {
-		 var chartDataUrl  = "/mood/" + "{{age_band}}" + "/" + 
+		 var chartDataUrl  = "/main/mood/" + "{{age_band}}" + "/" + 
 		 "{{gender}}" + "/" + "{{race}}" + "/" + "{{mood}}" + "/";
 
 		 this.chart = new FusionCharts(

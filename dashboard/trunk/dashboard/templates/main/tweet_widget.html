@@ -14,7 +14,7 @@ var tweet_widget = (function () {
     	page_size : 10,
 	page_index : 0,
 	update   : function () {
-	   $.getJSON("/tweet/"+this.page_index +"/"+this.page_size+"/", { age_band : "{{age_band}}", gender :"{{gender}}", race : "{{race}}", mood : "{{mood}}" },
+	   $.getJSON("/main/tweet/"+this.page_index +"/"+this.page_size+"/", { age_band : "{{age_band}}", gender :"{{gender}}", race : "{{race}}", mood : "{{mood}}" },
 	      function(data) {
 	         var body_html = '<table>';
 		 $.each(data, function(i, tweet) {
@@ -30,7 +30,7 @@ var tweet_widget = (function () {
 	}, // the callbacks
 	init     : function () {
 		 var self = this;
-		 $.getJSON("/tweet/total/"+self.page_size+"/", {
+		 $.getJSON("/main/tweet/total/"+self.page_size+"/", {
 		 age_band :"{{age_band}}", gender :"{{gender}}", race
 		 : "{{race}}",  mood : "{{mood}}"  },
 		    function(data) {
