@@ -1,8 +1,10 @@
 from django.db import models
+import dateutil.parser as p
 
 # Create your models here.
 
 class Tweet(models.Model):
+    time_posted = models.DateTimeField()
     age_band = models.CharField(max_length=10)
     gender   = models.CharField(max_length=10)
     race     = models.CharField(max_length=10)
@@ -16,15 +18,22 @@ def import_from_xls(fname):
     file = open(fname, 'r')
     for ln in file:
         cols = ln.strip("\r\n").split('\t')
-        t = Tweet(age_band = cols[0],
-                  gender   = cols[1],
-                  race     = cols[2],
-                  tweet    = cols[3],
-                  mood     = cols[4],
-                  location = cols[5],
-                  latitude = cols[6],
-                  longitude = cols[7]
+        t = Tweet(time_posted = p.parse(cols[0]),
+                  age_band = cols[1] if len(cols[1]) >0 else 'UNKNOWN',
+                  gender   = cols[2] if len(cols[2]) >0 else 'UNKNOWN',
+                  race     = cols[3] if len(cols[3]) >0 else 'UNKNOWN',
+                  tweet    = cols[4],
+                  mood     = cols[5] if len(cols[5]) >0 else 'UNKNOWN',
+                  location = cols[6] if len(cols[6]) >0 else 'UNKNOWN',
+                  latitude = cols[7],
+                  longitude = cols[8]
                   )
         t.save()
     file.close()
         
+'''
+update main_tweet set location = 'Universal Studio' where location = 'uss';
+update main_tweet set location = 'Hard Rock Hotel' where location = 'hard rock hotel';
+update main_tweet set location = 'Siloso Beach' where location = 'siloso beach';
+update main_tweet set location = 'Resort World Singapore' where location = 'rws';
+'''

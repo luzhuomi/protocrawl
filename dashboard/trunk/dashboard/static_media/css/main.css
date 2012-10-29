@@ -15,10 +15,15 @@
 }
 
 td {
+    font-size:14px;
     padding-top:3px;
     padding-left:5px;
     padding-right:5px;
     padding-bottom:3px;
+}
+
+.tweet {
+   width:400px;
 }
 
 .odd {

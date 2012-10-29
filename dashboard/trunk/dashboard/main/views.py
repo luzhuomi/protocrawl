@@ -178,14 +178,14 @@ def map(request):
 
 
 def tweet_ajax(request,page_index,page_size):
-	results = fetch_results(request)
+	results = fetch_results(request).order_by("-time_posted")
 	page_index = int(page_index)
 	page_size = int(page_size)
 	tweets = []
 	
 	style = "even"
 	for result in results:
-		tweets.append({ "text" : result.tweet.replace('\/','/'), "mood" : result.mood, "style" : style })
+		tweets.append({ "text" : result.tweet.replace('\/','/'), "mood" : result.mood, "style" : style, "time_posted": str(result.time_posted)})
 		if style == "even":
 			style = "odd"
 		else:
