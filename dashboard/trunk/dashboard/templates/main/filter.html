@@ -1,7 +1,7 @@
 <div id="filter_container">
   <form action="." method="get">
-  <div class="filter">
-  <label for="age_band">Age Band</label>
+  <div class="filter">    
+  <label for="age_band">Age Band:</label>
   <select id="age_band" name="age_band">
     <option value = "all">All</option>    
     <option value = "18-24">18-24</option>
@@ -13,7 +13,7 @@
   </select>
   </div>
   <div class="filter">
-  <label for="gender">Gender</label>
+  <label for="gender">Gender:</label>
   <select id="gender" name="gender">
     <option value = "all">All</option>
     <option value = "female">Female</option>
@@ -21,7 +21,7 @@
   </select>
   </div>  
   <div class="filter">
-  <label for="race">Race</label>
+  <label for="race">Race:</label>
   <select id="race" name="race">
     <option value = "all">All</option>
     <option value = "chinese">Chinese</option>
@@ -30,6 +30,17 @@
     <option value = "others">Others</option>            
   </select>
   </div>
+  <div class="filter">    
+  <label for="mood">Mood:</label>
+  <select id="mood" name="mood">
+    <option value = "all">All</option>    
+    <option value = "joy">Joy</option>
+    <option value = "surprised">Surprised</option>
+    <option value = "disgusted">Disgusted</option>
+    <option value = "sadness">Sadness</option>
+    <option value = "anger">Anger</option>
+  </select>
+  </div>  
   <div class="filter">
     <input type="submit" value="Submit"/>
   </div>
@@ -42,21 +53,25 @@ var filter = (function () {
     	age_band : $("#age_band").val(),
 	gender   : $("#gender").val(),
 	race     : $("#race").val(),
+	mood	 : $("#mood").val(),
 	update   : null, // the callbacks
 	init     : function () {
 	   $("#age_band").val('{{age_band}}');
 	   $("#gender").val('{{gender}}');
 	   $("#race").val('{{race}}');
+	   $("#mood").val('{{mood}}');
            var self = this;
            $("#age_band").change(function () {
 	        self.age_band = $("#age_band").val();
-		console.log("hi");
 	   });
            $("#gender").change(function () {
 	        self.gender = $("#gender").val();
 	   });
            $("#race").change(function () {
 	        self.race = $("#race").val();
+	   });
+           $("#mood").change(function () {
+	        self.mood = $("#mood").val();
 	   });
 	}
     }

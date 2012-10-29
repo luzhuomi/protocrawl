@@ -25,15 +25,18 @@ def fetch_results(request):
 	age_band = "all"
 	gender = "all"
 	race = "all"
+	mood = "all"
 	if request.GET.has_key("age_band"):
 		age_band = request.GET["age_band"]
 	if request.GET.has_key("gender"):
 		gender = request.GET["gender"]
 	if request.GET.has_key("race"):
 		race = request.GET["race"]
-	return fetch_results_inner(age_band,gender,race)
+	if request.GET.has_key("mood"):
+		mood = request.GET["mood"]
+	return fetch_results_inner(age_band,gender,race,mood)
 
-def fetch_results_inner(age_band,gender,race):
+def fetch_results_inner(age_band,gender,race,mood="all"):
 	results = Tweet.objects.all()
 	if (age_band != "all"):
 		results = results.filter(age_band = age_band)
@@ -41,18 +44,23 @@ def fetch_results_inner(age_band,gender,race):
 		results = results.filter(gender=gender.upper())
 	if (race != "all"):
 		results = results.filter(race=race.upper())
+	if (mood != "all"):
+		results = results.filter(mood=mood)
 	return results
 
 def home(request):
 	age_band = "all"
 	gender = "all"
 	race = "all"
+	mood = "all"
 	if request.GET.has_key("age_band"):
 		age_band = request.GET["age_band"]
 	if request.GET.has_key("gender"):
 		gender = request.GET["gender"]
 	if request.GET.has_key("race"):
-		race = request.GET["race"]	
+		race = request.GET["race"]
+	if request.GET.has_key("mood"):
+		mood = request.GET["mood"]
 	results = fetch_results(request)
 
 	# rendering the map # todo figure out a way to put the map into a widget
@@ -104,6 +112,7 @@ def home(request):
 		   'gender': gender,
 		   'age_band' : age_band,
 		   'race' : race,
+		   'mood' : mood, 
 		   'settings' : settings, 
 		   }
 	return render_to_response(
@@ -176,7 +185,7 @@ def tweet_ajax(request,page_index,page_size):
 	
 	style = "even"
 	for result in results:
-		tweets.append({ "text" : result.tweet.replace('\/','/'), "style" : style })
+		tweets.append({ "text" : result.tweet.replace('\/','/'), "mood" : result.mood, "style" : style })
 		if style == "even":
 			style = "odd"
 		else:
@@ -193,16 +202,16 @@ def tweet_total_ajax(request, page_size):
 	return HttpResponse(simplejson.dumps(value))
 
 
-def mood_ajax(request, age_band, gender, race):
-	results = fetch_results_inner(age_band, gender, race)
+def mood_ajax(request, age_band, gender, race, mood):
+	results = fetch_results_inner(age_band, gender, race, mood)
 	dict = { "joy": 0, "surprised": 0, "disgusted":0 , "sadness":0, "anger":0}
 	for result in results:
 		dict[result.mood] += 1
 	context = { "mood": dict }
 	return render_to_response('main/mood.xml', context)
 
-def profile_ajax(request, age_band, gender, race, dimension):
-	results = fetch_results_inner(age_band, gender, race)
+def profile_ajax(request, age_band, gender, race, mood, dimension):
+	results = fetch_results_inner(age_band, gender, race, mood)
 
 	dict = {}
 	f = lambda x : x.race

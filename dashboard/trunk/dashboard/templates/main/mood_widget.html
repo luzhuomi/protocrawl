@@ -15,7 +15,8 @@ var mood_widget = (function () {
 	contentLoaded: false,
 
 	update   : function () {
-		 var chartDataUrl  = "/mood/" + "{{age_band}}" + "/" + "{{gender}}" + "/" + "{{race}}" + "/";
+		 var chartDataUrl  = "/mood/" + "{{age_band}}" + "/" + 
+		 "{{gender}}" + "/" + "{{race}}" + "/" + "{{mood}}" + "/";
 
 		 this.chart = new FusionCharts(
 		      "{{settings.STATIC_MEDIA_PREFIX}}/Radar.swf?ChartNoDataText=The selected filter settings yield no results.",

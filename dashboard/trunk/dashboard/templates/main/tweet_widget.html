@@ -14,12 +14,13 @@ var tweet_widget = (function () {
     	page_size : 10,
 	page_index : 0,
 	update   : function () {
-	   $.getJSON("/tweet/"+this.page_index +"/"+this.page_size+"/", { age_band : "{{age_band}}", gender :"{{gender}}", race : "{{race}}" },
+	   $.getJSON("/tweet/"+this.page_index +"/"+this.page_size+"/", { age_band : "{{age_band}}", gender :"{{gender}}", race : "{{race}}", mood : "{{mood}}" },
 	      function(data) {
 	         var body_html = '<table>';
 		 $.each(data, function(i, tweet) {
 		       body_html +=
-		          '<tr class="' +  tweet.style + '"><td class="fl">' + tweet.text + '</td></tr>';
+		          '<tr class="' +  tweet.style + '"><td class="fl">' + '<img width="\25px\" height=\"25px\" src=\"{{settings.STATIC_MEDIA_PREFIX}}/image/' + tweet.mood + '.png\"/></td>' + 
+			    '<td class="fl">' + tweet.text + '</td></tr>';
 		 })
 	 	 body_html += '</table>';
 	         $("#tweet_container").html(body_html);
@@ -28,7 +29,9 @@ var tweet_widget = (function () {
 	}, // the callbacks
 	init     : function () {
 		 var self = this;
-		 $.getJSON("/tweet/total/"+self.page_size+"/", { age_band :"{{age_band}}", gender :"{{gender}}", race : "{{race}}" },
+		 $.getJSON("/tweet/total/"+self.page_size+"/", {
+		 age_band :"{{age_band}}", gender :"{{gender}}", race
+		 : "{{race}}",  mood : "{{mood}}"  },
 		    function(data) {
 		      self.page_total = data.page_total;
 		      $("#pg_num").html(self.page_index+1);
