@@ -185,7 +185,7 @@ def tweet_ajax(request,page_index,page_size):
 	
 	style = "even"
 	for result in results:
-		tweets.append({ "text" : result.tweet.replace('\/','/'), "mood" : result.mood, "style" : style, "time_posted": str(result.time_posted)})
+		tweets.append({ "text" : mask_sensitive(result.tweet.replace('\/','/')), "mood" : result.mood, "style" : style, "time_posted": str(result.time_posted)})
 		if style == "even":
 			style = "odd"
 		else:
@@ -237,3 +237,15 @@ def profile_ajax(request, age_band, gender, race, mood, dimension):
 		    "dimension" : dimension,
 		    "dimension_name" : dimension.replace('_', ' ')}
 	return render_to_response('main/profile.xml', context)
+
+
+mask_mapping = {
+	'bangalas':'sweaty people' 
+	}
+
+
+def mask_sensitive(sentence):
+	x = sentence
+	for key,value in mask_mapping.items():
+		x = x.replace(key,value)
+	return x
