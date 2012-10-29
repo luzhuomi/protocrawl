@@ -1,4 +1,4 @@
-<chart palette="2" caption="Profile comparison by {{dimension_name}}" showLabels="1" showvalues="0" decimals="0" numberPrefix="">
+<chart palette="2" caption="Profile comparison by {{dimension_name}}" showLabels="1" showvalues="0" decimals="0" numberPrefix="" legendPosition="RIGHT">
 <categories><category label="Tweets" /></categories>
 {% for i in final %}
 <dataset seriesName="{{i.name}}" color="{{i.style}}" showValues="1">
