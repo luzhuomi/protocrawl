@@ -1,6 +1,6 @@
 # Create your views here.
 
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, redirect
 from django.http import HttpResponse
 from django.template import RequestContext
 from django.utils import simplejson
@@ -47,6 +47,9 @@ def fetch_results_inner(age_band,gender,race,mood="all"):
 	if (mood != "all"):
 		results = results.filter(mood=mood)
 	return results
+
+def home_redirect(request):
+	return redirect('main/')
 
 def home(request):
 	age_band = "all"

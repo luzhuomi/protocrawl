@@ -9,10 +9,14 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
+# CUSTOMIZED
+APP_DIR = "/Users/luzm/git/protocrawl/dashboard/trunk/dashboard/"
+
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'moodsensedashboard',                      # Or path to database file if using sqlite3.
+        'NAME': APP_DIR+'moodsensedashboard',                      # Or path to database file if using sqlite3.
         'USER': '',                      # Not used with sqlite3.
         'PASSWORD': '',                  # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
@@ -21,8 +25,6 @@ DATABASES = {
 }
 
 
-# CUSTOMIZED
-APP_DIR = "/Users/luzm/git/protocrawl/dashboard/trunk/dashboard/"
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name

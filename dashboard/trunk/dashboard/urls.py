@@ -7,6 +7,7 @@ from django.conf.urls.defaults import patterns, include, url
 # admin.autodiscover()
 
 urlpatterns = patterns('',
+        (r'^$', 'main.views.home_redirect'),
         (r'^main/$', 'main.views.home'),
         (r'main/', include('gmapi.urls.media')),        
         (r'main/tweet/(?P<page_index>\d+)/(?P<page_size>\d+)/', 'main.views.tweet_ajax'),
