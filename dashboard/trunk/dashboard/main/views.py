@@ -236,6 +236,7 @@ def profile_ajax(request, age_band, gender, race, mood, dimension):
 	for key,value in dict.items():
 		final.append( { "name" : key, "count": value, "style" : colors[i] })
 		i+=1
+	final.sort(lambda x,y:cmp(x["name"],y["name"]))
 	context = { "final" : final,
 		    "dimension" : dimension,
 		    "dimension_name" : dimension.replace('_', ' ')}
