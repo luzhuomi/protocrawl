@@ -27,8 +27,8 @@ def fetch_results(request):
 	gender = "all"
 	race = "all"
 	mood = "all"
-	date_to = ""
-	date_from = ""
+	date_from = (datetime.datetime.now() - datetime.timedelta(days=180)).strftime("%d-%b-%Y")
+	date_to = datetime.datetime.now().strftime("%d-%b-%Y")
 	if request.GET.has_key("age_band"):
 		age_band = request.GET["age_band"]
 	if request.GET.has_key("gender"):
@@ -49,7 +49,6 @@ def fetch_results_inner(age_band,gender,race,mood,date_from,date_to):
 		date_from = None
 		date_to = None
 	else:
-		print date_from
 		try:
 			date_from = p.parse(decode_html(date_from))
 			date_to =  p.parse(decode_html(date_to))
@@ -69,7 +68,6 @@ def fetch_results_inner(age_band,gender,race,mood,date_from,date_to):
 		results = results.filter(race=race.upper())
 	if (mood != "all"):
 		results = results.filter(mood=mood)
-	print date_from
 	return results
 
 def home_redirect(request):
@@ -83,8 +81,8 @@ def home(request):
 	gender = "all"
 	race = "all"
 	mood = "all"
-	date_to = ""
-	date_from = ""
+	date_from = (datetime.datetime.now() - datetime.timedelta(days=180)).strftime("%d-%b-%Y")
+	date_to = datetime.datetime.now().strftime("%d-%b-%Y")
 
 	if request.GET.has_key("age_band"):
 		age_band = request.GET["age_band"]
