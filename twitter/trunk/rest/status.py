@@ -94,7 +94,7 @@ def main():
         consumer_secret=cred['consumer_secret'],
         access_token_key=cred['access_token_key'],
         access_token_secret=cred['access_token_secret'])
-    user_file = open(sys.argv[1],'r')
+    user_file = open(sys.argv[2],'r')
     users=[]
     for ln in user_file:
         users = users + ln.strip('\r\n').split(',')
