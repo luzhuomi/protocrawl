@@ -1,3 +1,31 @@
+<link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css" />
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.8.2.js"></script>
+<script type="text/javascript"  src="http://code.jquery.com/ui/1.9.1/jquery-ui.js"></script>
+
+<script type="text/javascript">
+$(function() {
+        $.noConflict(); // unresolve the conflict between this jquery-1.8.2 with the jquery-1.4 from the gmapi
+
+        $("#date_from").datepicker({
+            dateFormat: 'dd-M-yy',
+            defaultDate: "-1m",
+            changeMonth: true,
+            numberOfMonths: 2,
+            onClose: function( selectedDate ) {
+                $("#date_to").datepicker( "option", "minDate", selectedDate );
+            }
+        });
+        $("#date_to").datepicker({
+            dateFormat: 'dd-M-yy',
+            defaultDate: "-1m",
+            changeMonth: true,
+            numberOfMonths: 2,
+            onClose: function( selectedDate ) {
+                $("#date_from").datepicker( "option", "maxDate", selectedDate );
+            }
+        });
+    });
+</script>
 <div id="filter_container">
   <form action="." method="get">
   <div class="filter">    
@@ -40,7 +68,13 @@
     <option value = "sadness">Sadness</option>
     <option value = "anger">Anger</option>
   </select>
-  </div>  
+  </div>
+  <div class="filter">
+    <label for="from">Date:</label>
+    <input type="text" id="date_from" name="date_from" class="date_text"/>
+    <label for="to"> - </label>
+    <input type="text" id="date_to" name="date_to" class="date_text"/>
+  </div>
   <div class="filter">
     <input type="submit" value="Submit"/>
   </div>
@@ -48,6 +82,8 @@
 </div>
 
 <script type="text/javascript">
+
+
 var filter = (function () {
     return {
     	age_band : $("#age_band").val(),
@@ -60,6 +96,8 @@ var filter = (function () {
 	   $("#gender").val('{{gender}}');
 	   $("#race").val('{{race}}');
 	   $("#mood").val('{{mood}}');
+           $("#date_from").val('{{date_from}}');
+           $("#date_to").val('{{date_to}}');
            var self = this;
            $("#age_band").change(function () {
 	        self.age_band = $("#age_band").val();

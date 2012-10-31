@@ -7,6 +7,7 @@ from django.utils import simplejson
 from django.conf import settings
 
 import datetime
+import dateutil.parser as p
 
 # for google map
 from django import forms
@@ -26,6 +27,8 @@ def fetch_results(request):
 	gender = "all"
 	race = "all"
 	mood = "all"
+	date_to = ""
+	date_from = ""
 	if request.GET.has_key("age_band"):
 		age_band = request.GET["age_band"]
 	if request.GET.has_key("gender"):
@@ -34,10 +37,30 @@ def fetch_results(request):
 		race = request.GET["race"]
 	if request.GET.has_key("mood"):
 		mood = request.GET["mood"]
-	return fetch_results_inner(age_band,gender,race,mood)
+	if request.GET.has_key("date_to"):
+		date_to = request.GET["date_to"]
+	if request.GET.has_key("date_from"):
+		date_from = request.GET["date_from"]
+		
+	return fetch_results_inner(age_band,gender,race,mood, date_from, date_to)
 
-def fetch_results_inner(age_band,gender,race,mood="all"):
-	results = Tweet.objects.all()
+def fetch_results_inner(age_band,gender,race,mood,date_from,date_to):
+	if date_from == "" or date_to == "":
+		date_from = None
+		date_to = None
+	else:
+		print date_from
+		try:
+			date_from = p.parse(decode_html(date_from))
+			date_to =  p.parse(decode_html(date_to))
+		except:
+			date_from = None
+			date_to =  None
+
+	if ((date_from is None) or (date_to is None)):
+		results = Tweet.objects.all()
+	else:
+		results = Tweet.objects.filter(time_posted__gte=date_from, time_posted__lte=date_to)
 	if (age_band != "all"):
 		results = results.filter(age_band = age_band)
 	if (gender != "all"):
@@ -46,16 +69,23 @@ def fetch_results_inner(age_band,gender,race,mood="all"):
 		results = results.filter(race=race.upper())
 	if (mood != "all"):
 		results = results.filter(mood=mood)
+	print date_from
 	return results
 
 def home_redirect(request):
 	return redirect('main/')
+
+def decode_html(s):
+	return s.replace('%2F','/')
 
 def home(request):
 	age_band = "all"
 	gender = "all"
 	race = "all"
 	mood = "all"
+	date_to = ""
+	date_from = ""
+
 	if request.GET.has_key("age_band"):
 		age_band = request.GET["age_band"]
 	if request.GET.has_key("gender"):
@@ -64,6 +94,11 @@ def home(request):
 		race = request.GET["race"]
 	if request.GET.has_key("mood"):
 		mood = request.GET["mood"]
+	if request.GET.has_key("date_to"):
+		date_to = request.GET["date_to"]
+	if request.GET.has_key("date_from"):
+		date_from = request.GET["date_from"]
+		
 	results = fetch_results(request)
 
 	# rendering the map # todo figure out a way to put the map into a widget
@@ -115,7 +150,9 @@ def home(request):
 		   'gender': gender,
 		   'age_band' : age_band,
 		   'race' : race,
-		   'mood' : mood, 
+		   'mood' : mood,
+		   'date_to': date_to,
+		   'date_from' :date_from,
 		   'settings' : settings, 
 		   }
 	return render_to_response(
@@ -205,16 +242,16 @@ def tweet_total_ajax(request, page_size):
 	return HttpResponse(simplejson.dumps(value))
 
 
-def mood_ajax(request, age_band, gender, race, mood):
-	results = fetch_results_inner(age_band, gender, race, mood)
+def mood_ajax(request, age_band, gender, race, mood, date_from, date_to):
+	results = fetch_results_inner(age_band, gender, race, mood, date_from, date_to)
 	dict = { "joy": 0, "surprised": 0, "disgusted":0 , "sadness":0, "anger":0}
 	for result in results:
 		dict[result.mood] += 1
 	context = { "mood": dict }
 	return render_to_response('main/mood.xml', context)
 
-def profile_ajax(request, age_band, gender, race, mood, dimension):
-	results = fetch_results_inner(age_band, gender, race, mood)
+def profile_ajax(request, age_band, gender, race, mood, date_from, date_to, dimension):
+	results = fetch_results_inner(age_band, gender, race, mood, date_from, date_to)
 
 	dict = {}
 	f = lambda x : x.race
@@ -253,3 +290,5 @@ def mask_sensitive(sentence):
 	for key,value in mask_mapping.items():
 		x = x.replace(key,value)
 	return x
+
+

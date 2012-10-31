@@ -1,5 +1,5 @@
 #filter_container { 
-    margin-left:460px;
+    margin-left:200px;
 }
 
 .filter { 
@@ -35,4 +35,8 @@ td {
 
 .paginator {
     float:right;
+}
+
+.date_text {
+    width:90px;
 }

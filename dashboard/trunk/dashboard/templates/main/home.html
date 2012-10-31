@@ -3,10 +3,11 @@
 <head>
 <title></title>
 <link rel="stylesheet" type="text/css" href="{{settings.STATIC_MEDIA_PREFIX }}/css/main.css" />
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js">
-</script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
+
 <script type="text/javascript" src="http://yui.yahooapis.com/3.5.1/build/yui/yui-min.js"></script>
 <script type="text/javascript" src="{{ settings.STATIC_MEDIA_PREFIX }}/js/FusionCharts.js"></script>
+
 <script type="text/javascript">
 YUI({
     //Last Gallery Build of this module
@@ -21,23 +22,21 @@ YUI({
 </head>
 
 <body>
-<div>
-  <img src="{{settings.STATIC_MEDIA_PREFIX}}/image/MoodSense_logo.png"
-  width=50px height=50px/>
-  <img src="{{settings.STATIC_MEDIA_PREFIX}}/image/nyp_logo.jpg"
-  width=200px height=50px/>
-  <img src="{{settings.STATIC_MEDIA_PREFIX}}/image/starhub_logo.jpg"
-  width=160px height=50px/>
+<div class="layout-hd">
+  <img src="{{settings.STATIC_MEDIA_PREFIX}}/image/MoodSense_logo.png" width=50px height=50px/>
+  <img src="{{settings.STATIC_MEDIA_PREFIX}}/image/nyp_logo.jpg"   width=200px height=50px/>
+  <img src="{{settings.STATIC_MEDIA_PREFIX}}/image/starhub_logo.jpg"   width=160px height=50px/>
 </div>
-<div class="layout-bd">
+<div class="layout-bd" >
   <div class="layout-module">
-    {% include "main/filter.html" %}
+  {% include "main/filter.html" %}
   </div>
-  <div class="layout-module-col">
+ 
+  <div class="layout-module-row  layout-not-managed">
       <div class="layout-module">
 	   {% include "main/mood_widget.html" %}
       </div>      
-      <div class="layout-module width:50%">
+      <div class="layout-module">
 	<div class="widget">
 	  <script type="text/javascript">
 	  window.myobj = {
@@ -52,7 +51,7 @@ YUI({
       <div class="layout-module">
 	   {% include "main/profile_widget.html" %}
       </div>      
-      <div class="layout-module width:50%">
+      <div class="layout-module">
       	   {% include "main/tweet_widget.html" %}
       </div>      
    </div>

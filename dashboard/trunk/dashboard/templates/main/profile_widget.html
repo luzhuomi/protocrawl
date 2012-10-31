@@ -21,7 +21,7 @@ var profile_widget = (function (div_id, dimension) {
 	contentLoaded: false,
 
 	update   : function () {
-		 var chartDataUrl  = "/main/profile/" + "{{age_band}}" +  "/" + "{{gender}}" + "/" + "{{race}}" + "/" + "{{mood}}" +"/" + dimension + "/";
+		 var chartDataUrl  = "/main/profile/{{age_band}}/{{gender}}/{{race}}/{{mood}}/{{date_from}}/{{date_to}}/" + dimension + "/";
 
 		 this.chart = new FusionCharts(
 		      "{{settings.STATIC_MEDIA_PREFIX}}/MSBar2D.swf?ChartNoDataText=The selected filter settings yield no results.",
