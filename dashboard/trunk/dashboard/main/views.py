@@ -65,7 +65,7 @@ def fetch_results_inner(age_band,gender,race,mood,date_from,date_to):
 	if ((date_from is None) or (date_to is None)):
 		results = Tweet.objects.all()
 	else:
-		results = Tweet.objects.filter(time_posted__gte=date_from, time_posted__lte=date_to)
+		results = Tweet.objects.filter(time_posted__gte=date_from, time_posted__lt=(date_to + datetime.timedelta(days=1)))
 	if (age_band != "all"):
 		results = results.filter(age_band = age_band)
 	if (gender != "all"):
