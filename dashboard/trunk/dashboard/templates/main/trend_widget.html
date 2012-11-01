@@ -1,0 +1,40 @@
+<div id="trend_widget" class="widget">
+     <div><!-- FusionChart -->
+         <div id="trend_fc_div"><div class="widget-initial-content"></div></div>
+     </div>
+</div>
+<script type="text/javascript">
+var trend_widget = (function () {
+    var render_div_id = trend_fc_div;
+    var chart_id = "trend_fc_div_fc";
+    var chart_width = "550";
+    var chart_height = "450";
+    return {
+        initialized: false,
+	overlay: null,
+	contentLoaded: false,
+
+	update   : function () {
+		 var chartDataUrl  = "/main/trend/{{age_band}}/{{gender}}/{{race}}/{{mood}}/{{date_from}}/{{date_to}}/";
+
+		 this.chart = new FusionCharts(
+		      "{{settings.STATIC_MEDIA_PREFIX}}/MSLine.swf?ChartNoDataText=The selected filter settings yield no results.",
+		      chart_id,
+		      chart_width,
+		      chart_height,
+		      "0", "1"
+		      );
+		 this.chart.setDataURL(chartDataUrl);
+		 this.chart.render(render_div_id);
+		 this.chart_initialized = true;
+
+	}, // the callbacks
+	init     : function () {
+	}
+    }
+})();
+
+trend_widget.init();
+trend_widget.update();
+
+</script>

@@ -290,3 +290,20 @@ def mask_sensitive(sentence):
 	return x
 
 
+def trend_ajax(request, age_band, gender, race, mood, date_from, date_to):
+	results = fetch_results_inner(age_band, gender, race, mood, date_from, date_to).order_by("time_posted")
+
+	data = {}
+
+	for r in results:
+		d = r.time_posted.date()
+		if data.has_key(d):
+			data[d]['total'] +=1
+			data[d][r.mood] +=1
+		else:
+			data[d] = { 'date' : d.strftime("%d-%b-%Y"), 'total' : 1, 'joy': 0, 'sadness' : 0, 'anger' : 0, 'disgusted' : 0, 'surprised' :0 }
+			data[d][r.mood] = 1
+
+	context = { "data" : sorted(data.values(), lambda x,y:cmp(x['date'],y['date'])),
+		    }
+	return render_to_response('main/trend.xml', context)	

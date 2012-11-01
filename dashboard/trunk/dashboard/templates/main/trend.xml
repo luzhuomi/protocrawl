@@ -1,0 +1,50 @@
+<chart caption="Mood Trend" 
+       numdivlines="4" showValues="0" 
+       numVDivLines="22" anchorRadius="2" 
+       labelDisplay="rotate" slantLabels="1" 
+       lineThickness="1" palette="1" 
+       xtLabelManagement="0">
+  <categories>
+{% for d in data %}
+    <category label="{{d.date}}"/>
+{% endfor %}
+  </categories>
+
+  <dataset seriesname="Total">
+{% for d in data %}
+    <set value="{{d.total}}"/>
+{% endfor %}
+  </dataset>
+
+  <dataset seriesname="Joy">
+{% for d in data %}
+    <set value="{{d.joy}}"/>
+{% endfor %}
+  </dataset>
+
+  <dataset seriesname="Surprised">
+{% for d in data %}
+    <set value="{{d.surprised}}"/>
+{% endfor %}
+  </dataset>
+
+  <dataset seriesname="Sadness">
+{% for d in data %}
+    <set value="{{d.sadness}}"/>
+{% endfor %}
+  </dataset>
+
+  <dataset seriesname="Anger">
+{% for d in data %}
+    <set value="{{d.anger}}"/>
+{% endfor %}
+  </dataset>
+
+  <dataset seriesname="Disgusted">
+{% for d in data %}
+    <set value="{{d.disgusted}}"/>
+{% endfor %}
+  </dataset>
+
+
+</chart>
