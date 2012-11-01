@@ -1,4 +1,4 @@
-<chart caption="Mood Radar" bgcolor="ffffff" anchoralpha="0" basefont="calibri" basefontsize="13" basefontcolor="3E3E3F" bordercolor="6FACD1" captionpadding="20" radarFillColor="FFFFFF" >
+<chart showAboutMenuItem="0" caption="Mood Radar" bgcolor="ffffff" anchoralpha="0" basefont="calibri" basefontsize="13" basefontcolor="3E3E3F" bordercolor="6FACD1" captionpadding="20" radarFillColor="FFFFFF" >
    <categories>
       <category label="Joy" />
       <category label="Surprised" />

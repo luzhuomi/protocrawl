@@ -13,6 +13,7 @@ class Tweet(models.Model):
     location = models.CharField(max_length=10)
     latitude  = models.FloatField()
     longitude = models.FloatField()
+    day_type = models.CharField(max_length=10)
 
 def import_from_xls(fname):
     file = open(fname, 'r')
@@ -27,7 +28,8 @@ def import_from_xls(fname):
                       mood     = cols[5] if len(cols[5]) >0 else 'UNKNOWN',
                       location = cols[6] if len(cols[6]) >0 else 'UNKNOWN',
                       latitude = cols[7],
-                      longitude = cols[8]
+                      longitude = cols[8],
+                      day_type  = cols[9],
                 )
             t.save()
     file.close()

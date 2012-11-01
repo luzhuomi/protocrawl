@@ -1,4 +1,4 @@
-<chart caption="Mood Trend" 
+<chart showAboutMenuItem="0" caption="Mood Trend" 
        numdivlines="4" showValues="0" 
        numVDivLines="22" anchorRadius="2" 
        labelDisplay="rotate" slantLabels="1" 
