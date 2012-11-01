@@ -2,7 +2,7 @@ body {
     text-align:left;
 }
 .filter_container { 
-    padding-left:300px;
+    padding-left:250px;
     /* border:1px solid black; */
 }
 
@@ -50,4 +50,8 @@ td {
 
 .date_text {
     width:90px;
+}
+
+.bd {
+    width:1220px;
 }
