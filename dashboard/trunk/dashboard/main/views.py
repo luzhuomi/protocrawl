@@ -229,7 +229,7 @@ def tweet_ajax(request,page_index,page_size):
 	
 	style = "even"
 	for result in results:
-		tweets.append({ "text" : mask_sensitive(result.tweet.replace('\/','/')), "mood" : result.mood, "style" : style, "time_posted": str(result.time_posted)})
+		tweets.append({ "text" : mask_sensitive(result.tweet.replace('\/','/')), "mood" : result.mood, "style" : style, "time_posted": result.time_posted.strftime("%d-%b-%Y %H:%M:%S %a")})
 		if style == "even":
 			style = "odd"
 		else:
