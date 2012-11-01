@@ -1,27 +1,10 @@
-import twitter
+import twitter # easy_install python-twitter
 from dateutil.parser import parse
 from mongomodel.crawl.twitter.models import *
 import pymongo
+import sys
 
-CONSUMER_KEY='Vp0UrPOKfUDonEn4B5RCpg'
-CONSUMER_SECRET='3wdvhsj1ph2PiNi1E47XullWsaEEZpepMPh4bgOCMY'
-ACCESS_TOKEN_KEY='634391884-qFKI6JYrZV6JFQYHIFhConcn7S1Se86SP0YHHWDt'
-ACCESS_TOKEN_SECRET='zcUKICiN4GWYrS7cyOBHyiJCHqeyjMGn3J7GfwVWrZ8'
-
-
-def read_cred(file):
-    in_handle = open(file,'r')
-    cred = {}
-    for ln in in_handle:
-        data = ln.strip('\r\n').split('=')
-        if len(data) > 1:
-            key = data[0].strip(' ').lower()
-            value = data[1].strip(' ')
-            cred[key] = value
-        else:
-            print "error in parsing credentials file"
-    return cred
-
+from common.utils import *
 
 def get_status(api,screenname):
     for p in range(1,21):
@@ -34,10 +17,12 @@ def get_status(api,screenname):
                 u = exists[0]
                 pass
             else:
+                print(user.AsDict())
                 u = User(uid = user.id, name = user.name)
                 u.favourites_count = user.favourites_count
                 u.favorites_count = user.friends_count
-                u.following = user.following
+                if hasattr(user, 'following'):
+                    u.following = user.following
                 u.followers_count = user.followers_count
                 u.profile_image_url = user.profile_image_url
                 u.contributors_enabled = user.contributors_enabled
@@ -45,18 +30,23 @@ def get_status(api,screenname):
                 u.created_at = parse(user.created_at)
                 u.description = user.description
                 u.listed_count = user.listed_count
-                u.follow_request_sent = user.follow_request_sent
+                if hasattr(user, 'follow_request_sent'):                
+                    u.follow_request_sent = user.follow_request_sent
                 u.time_zone = user.time_zone
                 u.url = user.url
                 u.verified = user.verified
-                u.default_profile = user.default_profile
-                u.show_all_inline_media = user.show_all_inline_media
-                u.is_translator = user.is_translator
+                if hasattr(user, 'default_profile'):                
+                    u.default_profile = user.default_profile
+                if hasattr(user, 'show_all_inline_media'):
+                    u.show_all_inline_media = user.show_all_inline_media
+                if hasattr(user, 'is_translator'):
+                    u.is_translator = user.is_translator
                 u.notifications = user.notifications
                 u.protected = user.protected
                 u.location = user.location
                 u.statuses_count = user.statuses_count
-                u.default_profile_image = user.default_profile_image
+                if hasattr(user, 'default_profile_image'):
+                    u.default_profile_image = user.default_profile_image
                 u.lang = user.lang
                 u.utc_offset = user.utc_offset
                 u.screen_name = user.screen_name

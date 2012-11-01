@@ -3,47 +3,9 @@ from dateutil.parser import parse
 from mongomodel.crawl.twitter.models import *
 import pymongo
 
-#STREAM_URL = "https://stream.twitter.com/1/statuses/filter.json?locations=103.594154,1.199738,104.017814,1.471575"
+from common.utils import *
+
 STREAM_URL = "https://stream.twitter.com/1/statuses/filter.json?follow="
-#STREAM_URL= "https://stream.twitter.com/1/statuses/sample.json"
-URL = "https://api.twitter.com/1/users/lookup.json?include_entities=true&screen_name="
-
-
-MAX_TERM_ALLOWED = 75
-
-def split_list_by(l,n):
-    rounds = len(l) / n
-    result = []
-    for i in range(0,rounds+1):
-        if i*n < len(l):
-            result.append(l[i*n:(i+1)*n])
-    return result
-
-def get_userids(usernames):
-    batches = split_list_by(usernames, MAX_TERM_ALLOWED)
-    userids = []
-    for batch in batches:
-        url = URL+','.join(batch)
-        print url
-        f = urllib2.urlopen(url)
-        j = json.loads(f.read())
-        userids = userids + map(lambda x:x['id'] ,j)
-        found = sets.Set(map(lambda x:x['screen_name'].lower(), j))
-        print "missing" + str(sets.Set(map(lambda x:x.lower(), batch)) - found)
-        f.close()
-    print userids
-    return userids
-
-def get_userids_file(infile):
-    inh = open(infile,'r')
-    unames = []
-    for ln in inh:
-        s = ln.strip('\r\n"')
-        unames.append(s)
-    inh.close()
-    uids = get_userids(unames)
-    return uids
-
 
 def insert_to_mongo(data):
     db = init()
@@ -166,7 +128,6 @@ def insert_to_mongo(data):
 
         
 
-
 def on_receive(data):
     #data_json = json.loads(data)
     print data    
@@ -177,20 +138,6 @@ if len(sys.argv) < 1:
     sys.exit(1)
 
 user_ids = get_userids_file(sys.argv[2])
-
-
-def read_cred(file):
-    in_handle = open(file,'r')
-    cred = {}
-    for ln in in_handle:
-        data = ln.strip('\r\n').split('=')
-        if len(data) > 1:
-            key = data[0].strip(' ').lower()
-            value = data[1].strip(' ')
-            cred[key] = value
-        else:
-            print "error in parsing credentials file"
-    return cred
 
 
 def loop(retry):
