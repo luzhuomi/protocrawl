@@ -5,7 +5,7 @@
 </categories>
 
 {% for mood in data %}
-<dataset seriesname="{{mood.mood}}" color="{{mood.color}}" >
+<dataset seriesname="{{mood.mood|capfirst}}" color="{{mood.color}}" >
 <set value="{{mood.weekday}}" />
 <set value="{{mood.weekend}}" />
 </dataset>

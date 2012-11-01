@@ -18,7 +18,7 @@ from dashboard.main.models import Tweet
 
 
 class MapForm(forms.Form):
-	map = forms.Field(widget=GoogleMap(attrs={'width':550, 'height':450}))
+	map = forms.Field(widget=GoogleMap(attrs={'width':600, 'height':450}))
 
 
 MOODCOLOR = { "anger" : "ea5148", 

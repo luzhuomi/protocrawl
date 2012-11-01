@@ -16,7 +16,7 @@ var tweet_widget = (function () {
 	update   : function () {
 	   $.getJSON("/main/tweet/"+this.page_index +"/"+this.page_size+"/", { age_band : "{{age_band}}", gender :"{{gender}}", race : "{{race}}", mood : "{{mood}}", date_from:"{{date_from}}", date_to:"{{date_to}}" },
 	      function(data) {
-	         var body_html = '<table>';
+	         var body_html = '<table class=\"no-border \">';
 		 $.each(data, function(i, tweet) {
 		       body_html +=
 		          '<tr class="' +  tweet.style + '"><td class="fl">' + '<img width="\25px\" height=\"25px\" src=\"{{settings.STATIC_MEDIA_PREFIX}}/image/' + tweet.mood + '.png\"/></td>' + 

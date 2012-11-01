@@ -2,41 +2,48 @@
 <html>
 <head>
 <title></title>
-<link rel="stylesheet" type="text/css" href="{{settings.STATIC_MEDIA_PREFIX }}/css/main.css" />
+<link rel="stylesheet" type="text/css" href="//ajax.googleapis.com/ajax/libs/yui/2.8.2/build/reset-fonts-grids/reset-fonts-grids.css" />
+<link rel="stylesheet" type="text/css" href="//ajax.googleapis.com/ajax/libs/yui/2.8.2/build/base/base-min.css" />
+
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
 
-<script type="text/javascript" src="http://yui.yahooapis.com/3.5.1/build/yui/yui-min.js"></script>
+<!-- <script type="text/javascript" src="http://yui.yahooapis.com/3.5.1/build/yui/yui-min.js"></script> -->
 <script type="text/javascript" src="{{ settings.STATIC_MEDIA_PREFIX }}/js/FusionCharts.js"></script>
+<link rel="stylesheet" type="text/css" href="{{settings.STATIC_MEDIA_PREFIX }}/css/main.css" />
+
 
 <script type="text/javascript">
+/*
 YUI({
     //Last Gallery Build of this module
     gallery: 'gallery-2012.05.16-20-37'
-}).use('gallery-layout-rows', function(Y)
+}).use('gallery-layout', function(Y) // gallery-layout-rows
 {
   // instantiate the component -- automatically scans the DOM
+  "use strict";
   var layout = new Y.PageLayout();
 });
+*/
 </script>
 
 </head>
 
 <body>
-<div class="layout-hd">
+<div class="yui-b">
   <img src="{{settings.STATIC_MEDIA_PREFIX}}/image/MoodSense_logo.png" width=50px height=50px/>
   <img src="{{settings.STATIC_MEDIA_PREFIX}}/image/nyp_logo.jpg"   width=200px height=50px/>
   <img src="{{settings.STATIC_MEDIA_PREFIX}}/image/starhub_logo.jpg"   width=160px height=50px/>
 </div>
-<div class="layout-bd" >
-  <div class="layout-module">
+<div class="yui-b" >
+  <div class="yui-b">
   {% include "main/filter.html" %}
   </div>
  
-  <div class="layout-module-row  layout-not-managed">
-      <div class="layout-module">
+  <div class="yui-g">
+      <div class="yui-u first">
 	   {% include "main/mood_widget.html" %}
       </div>      
-      <div class="layout-module">
+      <div class="yui-u">
 	<div class="widget">
 	  <script type="text/javascript">
 	  window.myobj = {
@@ -48,16 +55,16 @@ YUI({
 	  {{ form.media.js }}
 	</div>
       </div>
-      <div class="layout-module">
+      <div class="yui-u first">
 	   {% include "main/profile_widget.html" %}
       </div>      
-      <div class="layout-module">
+      <div class="yui-u">
       	   {% include "main/tweet_widget.html" %}
       </div>
-      <div class="layout-module">
+      <div class="yui-u first">
       	   {% include "main/trend_widget.html" %}
       </div>
-      <div class="layout-module">
+      <div class="yui-u">
       	   {% include "main/wday_widget.html" %}
       </div>                  
    </div>

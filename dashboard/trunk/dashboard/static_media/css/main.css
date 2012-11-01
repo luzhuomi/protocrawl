@@ -1,5 +1,9 @@
-#filter_container { 
-    margin-left:200px;
+body {
+    text-align:left;
+}
+.filter_container { 
+    padding-left:320px;
+    /* border:1px solid black; */
 }
 
 .filter { 
@@ -8,22 +12,29 @@
 }
 
 .widget { 
-    margin:10px 10px 10px 10px;
-    width:550px;
+    border:1px solid black;
+    padding:10px 10px 10px 10px;
+    /* padding:0px 0px 0px 0px;  */
+    width:600px;
     height:450px;
-    vertical-align:center;
 }
+
+table { 
+    margin:0px 0px 0px 0px;
+}
+
+td { border:2px solid white; }
 
 td {
     font-size:14px;
-    padding-top:3px;
+    padding-top:2px;
     padding-left:5px;
     padding-right:5px;
-    padding-bottom:3px;
+    padding-bottom:2px;
 }
 
 .tweet {
-   width:400px;
+   width:450px;
 }
 
 .odd {
