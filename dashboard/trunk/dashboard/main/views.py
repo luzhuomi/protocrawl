@@ -21,6 +21,12 @@ class MapForm(forms.Form):
 	map = forms.Field(widget=GoogleMap(attrs={'width':550, 'height':450}))
 
 
+MOODCOLOR = { "anger" : "ea5148", 
+	      "disgusted" : "8ae65f",
+	      "joy" : "ffc334",
+	      "sadness" : "2c60c8",
+	      "surprised" : "fa9d4d" }
+
 
 def fetch_results(request):
 	age_band = "all"
@@ -136,7 +142,7 @@ def home(request):
 		maps.event.addListener(marker, 'mouseover', 'myobj.markerOver')
 		maps.event.addListener(marker, 'mouseout', 'myobj.markerOut')
 		# mesg = "%s <br/> joy : %d <br/> surprised : %d <br/> sadness : %d <br/> anger : %d <br/> disgusted : %d" % (key, val["joy"], val["surprised"], val["sadness"], val["anger"], val["disgusted"])
-		mesg = "%s <br/> <img src='https://chart.googleapis.com/chart?chco=74ACD1,738DD1,D1737D,D1C773,A2A2A2,1E425A&cht=p&chd=t:%d,%d,%d,%d,%d&chs=300x120&chdl=joy|surprised|sadness|anger|disgusted&chl=%d|%d|%d|%d|%d'/>" % (key, val["joy"], val["surprised"], val["sadness"], val["anger"], val["disgusted"], val["joy"], val["surprised"], val["sadness"], val["anger"], val["disgusted"])
+		mesg = "%s <br/> <img src='https://chart.googleapis.com/chart?chco=%s,%s,%s,%s,%s&cht=p&chd=t:%d,%d,%d,%d,%d&chs=300x120&chdl=joy|surprised|sadness|anger|disgusted&chl=%d|%d|%d|%d|%d'/>" % (key, MOODCOLOR["joy"], MOODCOLOR["surprised"], MOODCOLOR["sadness"], MOODCOLOR["anger"], MOODCOLOR["disgusted"], val["joy"], val["surprised"], val["sadness"], val["anger"], val["disgusted"], val["joy"], val["surprised"], val["sadness"], val["anger"], val["disgusted"])
 		info = maps.InfoWindow({
 			'content': mesg ,
 			'disableAutoPan': True
@@ -305,5 +311,26 @@ def trend_ajax(request, age_band, gender, race, mood, date_from, date_to):
 			data[d][r.mood] = 1
 
 	context = { "data" : sorted(data.values(), lambda x,y:cmp(x['date'],y['date'])),
+		    "color" : MOODCOLOR,
 		    }
 	return render_to_response('main/trend.xml', context)	
+
+
+def wday_ajax(request, age_band, gender, race, mood, date_from, date_to):
+	results = fetch_results_inner(age_band, gender, race, mood, date_from, date_to)
+
+	data = {}
+	
+	for r in results:
+		m = r.mood
+		if not (data.has_key(m)):
+			data[m] = { 'mood' : m, 'weekday' : 0, 'weekend' : 0 , 'color' : MOODCOLOR[m] }
+		if r.day_type.lower() == "weekend":
+			data[m]['weekend'] +=1
+		else:
+			data[m]['weekday'] +=1
+
+	context = { "data" : data.values() }
+
+	return render_to_response('main/wday.xml', context)
+			

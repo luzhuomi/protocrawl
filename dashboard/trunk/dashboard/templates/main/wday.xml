@@ -1,0 +1,13 @@
+<chart showAboutMenuItem="0" caption="Weekday vs Weekend Comparison" showLabels="1" showvalues="1" decimals="0" placeValuesInside="1" rotateValues="1">
+<categories>
+<category label="Weekday" />
+<category label="Weekend" />
+</categories>
+
+{% for mood in data %}
+<dataset seriesname="{{mood.mood}}" color="{{mood.color}}" >
+<set value="{{mood.weekday}}" />
+<set value="{{mood.weekend}}" />
+</dataset>
+{% endfor %}
+</chart>

@@ -16,31 +16,31 @@
 {% endfor %}
   </dataset>
 
-  <dataset seriesname="Joy">
+  <dataset seriesname="Joy" color="{{color.joy}}">
 {% for d in data %}
     <set value="{{d.joy}}"/>
 {% endfor %}
   </dataset>
 
-  <dataset seriesname="Surprised">
+  <dataset seriesname="Surprised" color="{{color.surprised}}">
 {% for d in data %}
     <set value="{{d.surprised}}"/>
 {% endfor %}
   </dataset>
 
-  <dataset seriesname="Sadness">
+  <dataset seriesname="Sadness" color="{{color.sadness}}">
 {% for d in data %}
     <set value="{{d.sadness}}"/>
 {% endfor %}
   </dataset>
 
-  <dataset seriesname="Anger">
+  <dataset seriesname="Anger" color="{{color.anger}}">
 {% for d in data %}
     <set value="{{d.anger}}"/>
 {% endfor %}
   </dataset>
 
-  <dataset seriesname="Disgusted">
+  <dataset seriesname="Disgusted" color="{{color.disgusted}}">
 {% for d in data %}
     <set value="{{d.disgusted}}"/>
 {% endfor %}
