@@ -19,7 +19,7 @@ var tweet_widget = (function () {
 	         var body_html = '<table class=\"no-border \">';
 		 $.each(data, function(i, tweet) {
 		       body_html +=
-		          '<tr class="' +  tweet.style + '"><td class="fl">' + '<img width="\25px\" height=\"25px\" src=\"{{settings.STATIC_MEDIA_PREFIX}}/image/' + tweet.mood + '.png\"/></td>' + 
+		          '<tr class="' +  tweet.style + '"><td class="fl">' + '<img alt=\"'+tweet.mood+'\" width="\25px\" height=\"25px\" src=\"{{settings.STATIC_MEDIA_PREFIX}}/image/' + tweet.mood + '.png\"/></td>' + 
 			    '<td class="fl tweet">&ldquo;' + tweet.text + '&rdquo;</td><td class="fl">' +
 			      tweet.time_posted  +'</td></tr>';
 		 })
