@@ -10,7 +10,7 @@ from common.utils import *
 def export(user_ids, filename):
     db = init()
     users = User.objects.filter(uid__in = user_ids)
-    tweets = Tweet.objects.filter(user__in = users)
+    tweets = Tweet.objects.filter(user__in = users).order_by("created_at")
     f_out = open(filename,'w')
     for t in tweets:
         ln = "\t".join([str(t.created_at), str(t.user.uid),t.user.screen_name.encode('utf-8'),t.text.encode('utf-8').replace('\r',' ').replace('\n',' ').replace('\t',' ')])
