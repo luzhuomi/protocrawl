@@ -5,6 +5,7 @@ import pymongo
 import sys
 
 from common.utils import *
+from common.user import mk_user_obj,read_usernames_from_file
 
 def get_status(api,screenname):
     for p in range(1,21):
@@ -12,45 +13,7 @@ def get_status(api,screenname):
             statuses = api.GetUserTimeline(screenname,page=p)
             if len(statuses) > 0:
                 user = statuses[0].user
-                exists = User.objects.filter(uid = user.id)
-                if exists:
-                    print "user exists"
-                    u = exists[0]
-                else:
-                    print(user.AsDict())
-                    u = User(uid = user.id, name = user.name)
-                    u.favourites_count = user.favourites_count
-                    u.favorites_count = user.friends_count
-                    if hasattr(user, 'following'):
-                        u.following = user.following
-                    u.followers_count = user.followers_count
-                    u.profile_image_url = user.profile_image_url
-                    u.contributors_enabled = user.contributors_enabled
-                    u.geo_enabled = user.geo_enabled
-                    u.created_at = parse(user.created_at)
-                    u.description = user.description
-                    u.listed_count = user.listed_count
-                    if hasattr(user, 'follow_request_sent'):                
-                        u.follow_request_sent = user.follow_request_sent
-                    u.time_zone = user.time_zone
-                    u.url = user.url
-                    u.verified = user.verified
-                    if hasattr(user, 'default_profile'):                
-                        u.default_profile = user.default_profile
-                    if hasattr(user, 'show_all_inline_media'):
-                        u.show_all_inline_media = user.show_all_inline_media
-                    if hasattr(user, 'is_translator'):
-                        u.is_translator = user.is_translator
-                    u.notifications = user.notifications
-                    u.protected = user.protected
-                    u.location = user.location
-                    u.statuses_count = user.statuses_count
-                    if hasattr(user, 'default_profile_image'):
-                        u.default_profile_image = user.default_profile_image
-                    u.lang = user.lang
-                    u.utc_offset = user.utc_offset
-                    u.screen_name = user.screen_name
-                    u.save()
+                u = mk_user_obj(user)
                 for status in statuses:
                     exists = Tweet.objects.filter(tid = status.id)
                     if exists:
@@ -85,10 +48,9 @@ def main():
         consumer_secret=cred['consumer_secret'],
         access_token_key=cred['access_token_key'],
         access_token_secret=cred['access_token_secret'])
-    user_file = open(sys.argv[2],'r')
-    users=[]
-    for ln in user_file:
-        users = users + ln.strip('\r\n').split(',')
+    user_file = sys.argv[2]
+    users = read_usernames_from_file(user_file)
+
     db = init()
     for user in users:
         get_status(api,user)
