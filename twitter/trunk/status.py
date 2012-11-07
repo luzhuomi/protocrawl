@@ -8,74 +8,75 @@ from common.utils import *
 
 def get_status(api,screenname):
     for p in range(1,21):
-        statuses = api.GetUserTimeline(screenname,page=p)
-        if len(statuses) > 0:
-            user = statuses[0].user
-            exists = User.objects.filter(uid = user.id)
-            if exists:
-                print "user exists"
-                u = exists[0]
-                pass
-            else:
-                print(user.AsDict())
-                u = User(uid = user.id, name = user.name)
-                u.favourites_count = user.favourites_count
-                u.favorites_count = user.friends_count
-                if hasattr(user, 'following'):
-                    u.following = user.following
-                u.followers_count = user.followers_count
-                u.profile_image_url = user.profile_image_url
-                u.contributors_enabled = user.contributors_enabled
-                u.geo_enabled = user.geo_enabled
-                u.created_at = parse(user.created_at)
-                u.description = user.description
-                u.listed_count = user.listed_count
-                if hasattr(user, 'follow_request_sent'):                
-                    u.follow_request_sent = user.follow_request_sent
-                u.time_zone = user.time_zone
-                u.url = user.url
-                u.verified = user.verified
-                if hasattr(user, 'default_profile'):                
-                    u.default_profile = user.default_profile
-                if hasattr(user, 'show_all_inline_media'):
-                    u.show_all_inline_media = user.show_all_inline_media
-                if hasattr(user, 'is_translator'):
-                    u.is_translator = user.is_translator
-                u.notifications = user.notifications
-                u.protected = user.protected
-                u.location = user.location
-                u.statuses_count = user.statuses_count
-                if hasattr(user, 'default_profile_image'):
-                    u.default_profile_image = user.default_profile_image
-                u.lang = user.lang
-                u.utc_offset = user.utc_offset
-                u.screen_name = user.screen_name
-                u.save()
-            for status in statuses:
-                exists = Tweet.objects.filter(tid = status.id)
+        try:
+            statuses = api.GetUserTimeline(screenname,page=p)
+            if len(statuses) > 0:
+                user = statuses[0].user
+                exists = User.objects.filter(uid = user.id)
                 if exists:
-                    print "tweet exists"
-                    pass
-                else:            
-                    t = Tweet(tid = status.id)
-                    t.user = u
-                    t.contributors = status.contributors
-                    t.place = status.place
-                    t.in_reply_to_screen_name = status.in_reply_to_screen_name
-                    t.text = status.text
-                    t.favorited = status.favorited
-                    t.coordinates = status.coordinates
-                    t.geo = status.geo
-                    t.retweet_count = status.retweet_count
-                    t.created_at = parse(status.created_at)
-                    t.source = status._source
-                    t.in_reply_to_user_id = status.in_reply_to_user_id
-                    t.in_reply_to_status_id = status.in_reply_to_status_id
-                    t.retweeted = status.retweeted
-                    t.truncated = status.truncated
-                    # t.entities = status.entities
-                    t.save()
-                print status.text
+                    print "user exists"
+                    u = exists[0]
+                else:
+                    print(user.AsDict())
+                    u = User(uid = user.id, name = user.name)
+                    u.favourites_count = user.favourites_count
+                    u.favorites_count = user.friends_count
+                    if hasattr(user, 'following'):
+                        u.following = user.following
+                    u.followers_count = user.followers_count
+                    u.profile_image_url = user.profile_image_url
+                    u.contributors_enabled = user.contributors_enabled
+                    u.geo_enabled = user.geo_enabled
+                    u.created_at = parse(user.created_at)
+                    u.description = user.description
+                    u.listed_count = user.listed_count
+                    if hasattr(user, 'follow_request_sent'):                
+                        u.follow_request_sent = user.follow_request_sent
+                    u.time_zone = user.time_zone
+                    u.url = user.url
+                    u.verified = user.verified
+                    if hasattr(user, 'default_profile'):                
+                        u.default_profile = user.default_profile
+                    if hasattr(user, 'show_all_inline_media'):
+                        u.show_all_inline_media = user.show_all_inline_media
+                    if hasattr(user, 'is_translator'):
+                        u.is_translator = user.is_translator
+                    u.notifications = user.notifications
+                    u.protected = user.protected
+                    u.location = user.location
+                    u.statuses_count = user.statuses_count
+                    if hasattr(user, 'default_profile_image'):
+                        u.default_profile_image = user.default_profile_image
+                    u.lang = user.lang
+                    u.utc_offset = user.utc_offset
+                    u.screen_name = user.screen_name
+                    u.save()
+                for status in statuses:
+                    exists = Tweet.objects.filter(tid = status.id)
+                    if exists:
+                        print "tweet exists"
+                    else:            
+                        t = Tweet(tid = status.id)
+                        t.user = u
+                        t.contributors = status.contributors
+                        t.place = status.place
+                        t.in_reply_to_screen_name = status.in_reply_to_screen_name
+                        t.text = status.text
+                        t.favorited = status.favorited
+                        t.coordinates = status.coordinates
+                        t.geo = status.geo
+                        t.retweet_count = status.retweet_count
+                        t.created_at = parse(status.created_at)
+                        t.source = status._source
+                        t.in_reply_to_user_id = status.in_reply_to_user_id
+                        t.in_reply_to_status_id = status.in_reply_to_status_id
+                        t.retweeted = status.retweeted
+                        t.truncated = status.truncated
+                        # t.entities = status.entities
+                        t.save()
+                        print status.text
+        except twitter.TwitterError,e:
+            print "twitter error!"
         
 def main():
     cred = read_cred(sys.argv[1])        
