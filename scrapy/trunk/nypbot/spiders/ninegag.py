@@ -24,7 +24,7 @@ class NineGagSpider(CrawlSpider):
     def insert_posts(self,posts):
         db = init()
         for item in posts:
-            print normalized9GagDate(item.get('date_posted'))
+            # print normalized9GagDate(item.get('date_posted'))
             art = Article(url=item.get('url'),
                           author_id=item.get('author_id'),
                           body=item.get('body'),
@@ -35,6 +35,11 @@ class NineGagSpider(CrawlSpider):
             if len(rs) == 0:
                 try: 
                     art.save()
+                    '''
+                    art.keyword_index()
+                    '''
+                    ind = Index(art)
+                    ind.save()
                 except UnicodeEncodeError,e:
                     self.log("unicode encode error")
                 except Exception,e:

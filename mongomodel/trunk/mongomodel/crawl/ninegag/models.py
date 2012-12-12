@@ -19,4 +19,15 @@ class Article(Document):
 		'indexes': ['url', 'author_id', 'date_posted', 'title'],
 	}
 
+	def to_doc(self):
+		doc = {}
+		doc['url'] = self.url
+		doc['author_id'] = self.author_id
+		doc['body'] = self.body
+		doc['title'] = self.title
+		doc['date_posted'] = self.date_posted
+		doc['image'] = self.image
+		doc['id'] = self._id
+		return doc
+
 
