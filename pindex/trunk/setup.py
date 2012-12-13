@@ -9,7 +9,7 @@ setup(  name='pindex',
         author_email='luzhuomi@gmail.com',
         url='',
         packages=['pindex'
-	          ,'pindex.index'
+	          #,'pindex.index'
 		 ],
 	platforms=["any"],
         long_description="This module offers a full text index via solr.",

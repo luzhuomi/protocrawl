@@ -37,9 +37,9 @@ class NineGagSpider(CrawlSpider):
                     art.save()
                     '''
                     art.keyword_index()
-                    '''
                     ind = Index(art)
                     ind.save()
+                    '''
                 except UnicodeEncodeError,e:
                     self.log("unicode encode error")
                 except Exception,e:

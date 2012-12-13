@@ -26,8 +26,8 @@ class Article(Document):
 		doc['body'] = self.body
 		doc['title'] = self.title
 		doc['date_posted'] = self.date_posted
-		doc['image'] = self.image
-		doc['id'] = self._id
+		doc['image'] = self.image if self.image[0:5] == "http:" else "http:" + self.image
+		doc['id'] = self.id
 		return doc
 
 
