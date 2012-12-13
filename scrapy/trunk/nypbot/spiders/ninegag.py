@@ -9,7 +9,7 @@ from mongomodel.crawl.ninegag.models import *
 
 from dateutil.parser import parse
 import pymongo
-
+from pindex.index import *
 
 class NineGagSpider(CrawlSpider):
     name = "ninegag"
@@ -35,11 +35,8 @@ class NineGagSpider(CrawlSpider):
             if len(rs) == 0:
                 try: 
                     art.save()
-                    '''
-                    art.keyword_index()
-                    ind = Index(art)
-                    ind.save()
-                    '''
+                    i = PIndex(art.to_doc())
+                    i.save()
                 except UnicodeEncodeError,e:
                     self.log("unicode encode error")
                 except Exception,e:
