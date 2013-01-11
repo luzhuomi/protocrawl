@@ -10,8 +10,8 @@ def main():
         d = o.to_doc()
         pi = i.PIndex(d)
         # d['body'] = 'http://'
-        #del d['image']
-        del d['author_id']
+        del d['image']
+        del d['author']
         del d['date_posted']
         print (d)
         pi.save()
