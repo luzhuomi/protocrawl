@@ -1,6 +1,7 @@
 import urllib2, sys, sets
 import json
-
+from mongomodel.crawl.twitter.models import ScreenNameCache,init
+import pymongo
 
 MAX_TERM_ALLOWED = 75
 
@@ -30,10 +31,28 @@ def get_userids(usernames):
         j = json.loads(f.read())
         userids = userids + map(lambda x:x['id'] ,j)
         found = sets.Set(map(lambda x:x['screen_name'].lower(), j))
+        for x in j:
+            cache_userid(x['screen_name'], x['id'])
         print "missing" + str(sets.Set(map(lambda x:x.lower(), batch)) - found)
         f.close()
     print userids
     return userids
+
+def get_cached_userids(usernames):
+    found = []
+    not_found = []
+    for n in usernames:
+        cs = ScreenNameCache.objects.filter(screenname = n)
+        if len(cs) > 0:
+            c = cs[0]
+            found.append(c.tid)
+        else:
+            not_found.append(n)
+    return { 'found' : found, 'not_found' : not_found }
+
+def cache_userid(name,id):
+    c = ScreeNameCache(screenname = name, tid = id)
+    c.save()
 
 def get_userids_file(infile):
     inh = open(infile,'r')
@@ -42,8 +61,14 @@ def get_userids_file(infile):
         s = ln.strip('\r\n"')
         unames.append(s)
     inh.close()
+    db = init()
+    (found, not_found) = get_cached_userids(unames)
     uids = get_userids(unames)
-    return uids
+    if pymongo.version == '2.0.1':
+        db.connection.disconnect()
+    else:
+        db.disconnect()
+    return (found+uids)
 
 
 def split_list_by(l,n):
