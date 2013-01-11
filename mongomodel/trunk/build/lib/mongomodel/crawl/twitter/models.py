@@ -93,3 +93,21 @@ class R(Document):
 class T(Document):
 	e = EmbeddedDocumentField(E)
 	r = ReferenceField(R)
+
+
+''' the profile 
+class ProfileGroup(Document):
+	name = StringField(unique=True,required=True)
+	profile_keywords = DictField()
+	meta = {
+		'indexes': ['name']
+		}
+
+class ProfileGroupUser(Document):
+	user = ReferenceField(User)
+	profile_group = ReferenceField(Profile)
+	meta = {
+		'indexes' : ['profile_group', 'user']
+		}
+
+'''
