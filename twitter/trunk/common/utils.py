@@ -32,6 +32,8 @@ def get_userids(usernames):
         userids = userids + map(lambda x:x['id'] ,j)
         found = sets.Set(map(lambda x:x['screen_name'].lower(), j))
         for x in j:
+            print "caching"
+            print ((x['screen_name'], x['id']))
             cache_userid(x['screen_name'], x['id'])
         print "missing" + str(sets.Set(map(lambda x:x.lower(), batch)) - found)
         f.close()
@@ -51,7 +53,7 @@ def get_cached_userids(usernames):
     return { 'found' : found, 'not_found' : not_found }
 
 def cache_userid(name,id):
-    c = ScreeNameCache(screenname = name, tid = id)
+    c = ScreenNameCache(screenname = name, tid = id)
     c.save()
 
 def get_userids_file(infile):
@@ -62,8 +64,12 @@ def get_userids_file(infile):
         unames.append(s)
     inh.close()
     db = init()
-    (found, not_found) = get_cached_userids(unames)
-    uids = get_userids(unames)
+    cache_result = get_cached_userids(unames)
+    found = cache_result['found']
+    not_found = cache_result['not_found']
+    print "found %d in cache" % (len(found))
+    print "looking for %d from API" % (len(not_found))
+    uids = get_userids(not_found)
     if pymongo.version == '2.0.1':
         db.connection.disconnect()
     else:
