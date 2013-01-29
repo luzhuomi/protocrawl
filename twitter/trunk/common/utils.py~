@@ -60,7 +60,7 @@ def get_userids_file(infile):
     inh = open(infile,'r')
     unames = []
     for ln in inh:
-        s = ln.strip('\r\n"').replace(' ','%20')
+        s = ln.strip('\r\n"')
         unames.append(s)
     inh.close()
     db = init()
