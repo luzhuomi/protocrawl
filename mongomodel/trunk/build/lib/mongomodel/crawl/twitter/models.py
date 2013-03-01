@@ -111,3 +111,12 @@ class ProfileGroupUser(Document):
 		}
 
 '''
+
+
+class ScreenNameCache(Document):
+	screenname = StringField()
+	tid = IntField()
+	meta = {
+		'indexes' : ['screenname']
+		}
+	

@@ -121,10 +121,10 @@ def insert_to_mongo(data):
         # raise e
 
 
-    if pymongo.version == '2.0.1':
-        db.connection.disconnect()
+    if hasattr(db,'disconnect'):
+	db.disconnect()
     else:
-        db.disconnect()
+        db.connection.disconnect()
 
         
 
