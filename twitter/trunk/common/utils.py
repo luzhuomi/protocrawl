@@ -70,10 +70,10 @@ def get_userids_file(infile):
     print "found %d in cache" % (len(found))
     print "looking for %d from API" % (len(not_found))
     uids = get_userids(not_found)
-    if pymongo.version == '2.0.1':
-        db.connection.disconnect()
-    else:
+    if hasattr(db,'disconnect'):
         db.disconnect()
+    else:
+        db.connection.disconnect()
     return (found+uids)
 
 

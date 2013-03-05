@@ -54,10 +54,10 @@ def main():
     db = init()
     for user in users:
         get_status(api,user)
-    if hasattr(db,'disconnect'):
-        db.disconnect()
-    else:
+    if pymongo.version == '2.0.1':
         db.connection.disconnect()
+    else:
+        db.disconnect()    
 
 """
 >>> dir(statuses[0])
