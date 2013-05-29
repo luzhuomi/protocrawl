@@ -1,0 +1,51 @@
+== prerequisite ==
+
+=== configure mongodb ===
+
+$ export VERSION=osx-x86_64-2.2.2
+$ sudo tar zxvf mongodb-${VERSION}.tgz > /opt/
+$ sudo mkdir -p /mnt/mongodb/data
+
+$ sudo echo "
+dbpath=/mnt/mongodb/data                                                       
+port=27017
+noauth=true 
+verbose=true
+logpath=/mnt/mongodb/mongodb.log 
+logappend=true
+" > /opt/mongodb-${VERSION}/mongodb.conf
+
+=== start mongo db ===
+$ /opt/mongodb-${VERSION}/bin/mongod -f /opt/mongodb-${VERSION}/mongodb.conf
+
+
+=== export data from the db ===
+$ python export.py allbatches /tmp/output-dump.txt 
+# where 
+#       allbatches is the list of twitter user ids, 
+#       /tmp/output-dump.txt is the dump.
+
+=== start stream crawler ===
+$ python stream.py twitter-credentials allbatches
+# where twitter-creentials the twitter credential file containing the following
+
+USER=
+PASSWORD=
+CONSUMER_KEY=
+CONSUMER_SECRET=
+ACCESS_TOKEN_KEY=
+ACCESS_TOKEN_SECRET=
+
+=== stop stream crawler ===
+$ ps aux | grep stream.py 
+# find out the process id <pid>
+$ kill -9 <pid>
+
+
+=== python packages needed for status/back-dated crawl (only needed for the first time) ===
+$ sudo easy_install python-twitter
+
+=== start status/back-dated crawl ===
+$ python status twitter-credentials allbatches
+
+

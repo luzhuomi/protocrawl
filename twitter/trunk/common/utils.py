@@ -24,21 +24,28 @@ URL = "https://api.twitter.com/1/users/lookup.json?include_entities=true&screen_
 def get_userids(usernames):
     batches = split_list_by(usernames, MAX_TERM_ALLOWED)
     userids = []
+    notfound = []
     for batch in batches:
         url = URL+','.join(batch)
         print url
-        f = urllib2.urlopen(url)
-        j = json.loads(f.read())
-        userids = userids + map(lambda x:x['id'] ,j)
-        found = sets.Set(map(lambda x:x['screen_name'].lower(), j))
-        for x in j:
-            print "caching"
-            print ((x['screen_name'], x['id']))
-            cache_userid(x['screen_name'], x['id'])
-        print "missing" + str(sets.Set(map(lambda x:x.lower(), batch)) - found)
-        f.close()
+        try:
+            f = urllib2.urlopen(url)
+            j = json.loads(f.read())
+            userids = userids + map(lambda x:x['id'] ,j)
+            found = sets.Set(map(lambda x:x['screen_name'].lower(), j))
+            for x in j:
+                print "caching"
+                print ((x['screen_name'], x['id']))
+                cache_userid(x['screen_name'], x['id'])
+            f.close()
+        except:
+            print "connection refused"
+            found = sets.Set([])
+        notfound_this_round = sets.Set(map(lambda x:x.lower(), batch)) - found
+        print "missing" + str(notfound_this_round)
+        notfound = notfound + list(notfound_this_round)
     print userids
-    return userids
+    return (userids, notfound)
 
 def get_cached_userids(usernames):
     found = []
@@ -69,7 +76,11 @@ def get_userids_file(infile):
     not_found = cache_result['not_found']
     print "found %d in cache" % (len(found))
     print "looking for %d from API" % (len(not_found))
-    uids = get_userids(not_found)
+    (uids,not_found_still) = get_userids(not_found)
+    ofh = open(infile + '.notfound', 'w')
+    for n in not_found_still:
+        print >> ofh, n
+    ofh.close()
     if hasattr(db,'disconnect'):
         db.disconnect()
     else:
