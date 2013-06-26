@@ -26,7 +26,7 @@ class MyStreamer(TwythonStreamer):
 stream = MyStreamer(APP_KEY, APP_SECRET,
                     OAUTH_TOKEN, OAUTH_TOKEN_SECRET)
 
-stream.statuses.filter(track='twitter')
-#stream.statuses.filter(follow='16414559')
+#stream.statuses.filter(track='twitter')
+stream.statuses.filter(follow="1544677256")
 #stream.user()  # Read the authenticated users home timeline (what they see on Twitter) in real-time
 #stream.site(follow='luzm')

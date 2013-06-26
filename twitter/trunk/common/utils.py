@@ -25,27 +25,28 @@ def read_cred(file):
 URL = "https://api.twitter.com/1/users/lookup.json?include_entities=true&screen_name="
 
 def get_userids(cred,usernames):
+    print "usernames" + str(usernames)
     batches = split_list_by(usernames, MAX_TERM_ALLOWED)
     userids = []
     notfound = []
     for batch in batches:
-        url = URL+','.join(batch)
-        print url
+        #url = URL+','.join(batch)
+        #print url
         try:
             #f = urllib2.urlopen(url)
             #j = json.loads(f.read())
             twitter = Twython(cred['consumer_key'], cred['consumer_secret'],
                               cred['access_token_key'], cred['access_token_secret'])
-            j = twitter.lookup_user(screen_name='ryanmcgrath,luzm')
+            j = twitter.lookup_user(screen_name=batch)
             userids = userids + map(lambda x:x['id'] ,j)
             found = sets.Set(map(lambda x:x['screen_name'].lower(), j))
             for x in j:
                 print "caching"
                 print ((x['screen_name'], x['id']))
                 cache_userid(x['screen_name'], x['id'])
-            f.close()
-        except:
-            print "connection refused"
+            # f.close()
+        except Exception as e:
+            print "connection refused" + str(e)
             found = sets.Set([])
         notfound_this_round = sets.Set(map(lambda x:x.lower(), batch)) - found
         print "missing" + str(notfound_this_round)
