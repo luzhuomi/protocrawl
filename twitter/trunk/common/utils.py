@@ -3,6 +3,9 @@ import json
 from mongomodel.crawl.twitter.models import ScreenNameCache,init
 import pymongo
 
+from twython import Twython, TwythonError
+
+
 MAX_TERM_ALLOWED = 75
 
 
@@ -21,7 +24,7 @@ def read_cred(file):
 
 URL = "https://api.twitter.com/1/users/lookup.json?include_entities=true&screen_name="
 
-def get_userids(usernames):
+def get_userids(cred,usernames):
     batches = split_list_by(usernames, MAX_TERM_ALLOWED)
     userids = []
     notfound = []
@@ -29,8 +32,11 @@ def get_userids(usernames):
         url = URL+','.join(batch)
         print url
         try:
-            f = urllib2.urlopen(url)
-            j = json.loads(f.read())
+            #f = urllib2.urlopen(url)
+            #j = json.loads(f.read())
+            twitter = Twython(cred['consumer_key'], cred['consumer_secret'],
+                              cred['access_token_key'], cred['access_token_secret'])
+            j = twitter.lookup_user(screen_name='ryanmcgrath,luzm')
             userids = userids + map(lambda x:x['id'] ,j)
             found = sets.Set(map(lambda x:x['screen_name'].lower(), j))
             for x in j:
@@ -63,7 +69,7 @@ def cache_userid(name,id):
     c = ScreenNameCache(screenname = name, tid = id)
     c.save()
 
-def get_userids_file(infile):
+def get_userids_file(cred,infile):
     inh = open(infile,'r')
     unames = []
     for ln in inh:
@@ -76,7 +82,7 @@ def get_userids_file(infile):
     not_found = cache_result['not_found']
     print "found %d in cache" % (len(found))
     print "looking for %d from API" % (len(not_found))
-    (uids,not_found_still) = get_userids(not_found)
+    (uids,not_found_still) = get_userids(cred,not_found)
     ofh = open(infile + '.notfound', 'w')
     for n in not_found_still:
         print >> ofh, n

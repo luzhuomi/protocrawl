@@ -5,7 +5,11 @@ import pymongo
 
 from common.utils import *
 
-STREAM_URL = "https://stream.twitter.com/1/statuses/filter.json?follow="
+from twython import TwythonStreamer # easy_install twython
+
+
+
+#STREAM_URL = "https://stream.twitter.com/1/statuses/filter.json?follow="
 
 def insert_to_mongo(data):
     db = init()
@@ -127,27 +131,49 @@ def insert_to_mongo(data):
         db.connection.disconnect()
 
         
-
+'''
 def on_receive(data):
     #data_json = json.loads(data)
     print data    
     insert_to_mongo(data)
-
-if len(sys.argv) < 1:
-    print "Usage: stream.py <user_id file>"
+'''
+if len(sys.argv) < 2:
+    print "Usage: stream.py <credential> <user_id file>"
     sys.exit(1)
 
-user_ids = get_userids_file(sys.argv[2])
+
+
+cred = read_cred(sys.argv[1])
+user_ids = get_userids_file(cred,sys.argv[2])
+
+
+class MyStreamer(TwythonStreamer):
+    def on_success(self, data):
+        if 'text' in data:
+            print data['text'].encode('utf-8')
+            insert_to_mongo(data)
+        # Want to disconnect after the first result?
+        # self.disconnect()
+
+    def on_error(self, status_code, data):
+        print status_code, data
 
 
 def loop(retry):
     try:
-        cred = read_cred(sys.argv[1])
+        '''
         conn = pycurl.Curl()
         conn.setopt(pycurl.USERPWD, "%s:%s" % (cred['user'], cred['password']))
         conn.setopt(pycurl.URL, STREAM_URL+','.join(map(str,user_ids)))
         conn.setopt(pycurl.WRITEFUNCTION, on_receive)
         conn.perform()
+        '''
+        print user_ids
+        stream = MyStreamer(cred['consumer_key'], cred['consumer_secret'],
+                            cred['access_token_key'], cred['access_token_secret'])
+
+        stream.statuses.filter(follow=','.join(map(str,user_ids)))
+
     except:
         if retry > 0:
             print "="*20
@@ -157,6 +183,9 @@ def loop(retry):
             print "="*20            
             print "no more retry, exiting..."
             sys.exit(0)
+
+
+
 
 loop(5)
     
