@@ -1,4 +1,5 @@
 #import twitter # easy_install python-twitter
+from time import sleep
 from dateutil.parser import parse
 from mongomodel.crawl.twitter.models import *
 import pymongo
@@ -15,7 +16,7 @@ def get_status(twitter,screenname):
         lastid = currid
         try:
             print (lastid, currid)
-            statuses = twitter.get_user_timeline(screen_name=screenname, max_id=currid) if currid else twitter.get_user_timeline(screen_name=screenname)
+            statuses = twitter.get_user_timeline(screen_name=screenname, max_id=currid,count=200) if currid else twitter.get_user_timeline(screen_name=screenname)
             if len(statuses) > 0:
                 user = statuses[0]['user']
                 u = mk_user_obj(user)
@@ -44,6 +45,7 @@ def get_status(twitter,screenname):
                         # t.entities = status.entities
                         t.save()
                         print status['text']
+            sleep(60)
         except Exception as e:
             print "twitter error!" + (str(e))
         
