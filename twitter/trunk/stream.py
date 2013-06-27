@@ -163,7 +163,12 @@ class MyStreamer(TwythonStreamer):
 stream = MyStreamer(cred['consumer_key'], cred['consumer_secret'],
                     cred['access_token_key'], cred['access_token_secret'])
 
-stream.statuses.filter(follow=','.join(map(str,user_ids)))
+
+if len(sys.argv) > 3:
+    keywords = sys.argv[3]
+    stream.statuses.filter(follow=','.join(map(str,user_ids)), track=keywords)
+else:
+    stream.statuses.filter(follow=','.join(map(str,user_ids)))
 
 
 '''
