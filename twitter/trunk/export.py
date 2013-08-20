@@ -24,8 +24,9 @@ def export(user_ids, filename):
 
     
 def main():
-    user_ids = get_userids_file(sys.argv[1])
-    export(user_ids, sys.argv[2])
+    cred = read_cred(sys.argv[1])
+    user_ids = get_userids_file(cred,sys.argv[2])
+    export(user_ids, sys.argv[3])
 
 
 
