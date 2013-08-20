@@ -20,7 +20,7 @@ $ /opt/mongodb-${VERSION}/bin/mongod -f /opt/mongodb-${VERSION}/mongodb.conf
 
 
 === export data from the db ===
-$ python export.py allbatches /tmp/output-dump.txt 
+$ python export.py twitter-credentials allbatches /tmp/output-dump.txt 
 # where 
 #       allbatches is the list of twitter user ids, 
 #       /tmp/output-dump.txt is the dump.
